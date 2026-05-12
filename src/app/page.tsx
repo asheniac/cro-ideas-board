@@ -1,10 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import CROCard from "@/components/CROCard";
 import SkeletonCard from "@/components/SkeletonCard";
 import { useIdeas } from "@/lib/hooks/use-ideas";
 import { useUpdateIdea } from "@/lib/hooks/use-update-idea";
+
+const STACK_DEPTH = 3;
+const VERTICAL_OFFSET = 15;
+
+/** Scale and opacity per stack position (0 = top card) */
+const SCALES = [1.0, 0.95, 0.9];
+const OPACITIES = [1, 0.85, 0.7];
 
 export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -18,16 +26,20 @@ export default function Home() {
     setTimeout(() => setToast(null), 4000);
   };
 
+  const advanceCard = () => {
+    setCurrentIndex((prev) => prev + 1);
+    setIsTransitioning(false);
+  };
+
   const handleLike = async (id: number) => {
     if (isTransitioning) return;
     setIsTransitioning(true);
     try {
       await updateStatus(id, "liked");
-      setCurrentIndex((prev) => prev + 1);
+      advanceCard();
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to like idea";
       showToast(message);
-    } finally {
       setIsTransitioning(false);
     }
   };
@@ -37,11 +49,10 @@ export default function Home() {
     setIsTransitioning(true);
     try {
       await updateStatus(id, "disliked");
-      setCurrentIndex((prev) => prev + 1);
+      advanceCard();
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to dislike idea";
       showToast(message);
-    } finally {
       setIsTransitioning(false);
     }
   };
@@ -128,6 +139,15 @@ export default function Home() {
     );
   }
 
+  // Build stack: up to STACK_DEPTH cards starting from currentIndex
+  const stackCards: { idea: (typeof ideas)[number]; stackPos: number }[] = [];
+  for (let i = 0; i < STACK_DEPTH; i++) {
+    const idx = currentIndex + i;
+    if (idx < ideas.length) {
+      stackCards.push({ idea: ideas[idx], stackPos: i });
+    }
+  }
+
   return (
     <div className="flex flex-col flex-1 items-center justify-center p-6">
       {/* Toast notification for errors */}
@@ -143,18 +163,57 @@ export default function Home() {
         </p>
       </div>
 
-      {isTransitioning ? (
-        <div className="w-full max-w-md mx-auto">
-          <SkeletonCard />
-        </div>
-      ) : (
-        <CROCard
-          idea={ideas[currentIndex]}
-          onLike={handleLike}
-          onDislike={handleDislike}
-          disabled={isTransitioning}
-        />
-      )}
+      {/* Card stack container */}
+      <div className="relative w-full max-w-md" style={{ minHeight: "520px" }}>
+        <AnimatePresence mode="popLayout">
+          {stackCards.map(({ idea, stackPos }) => {
+            const isTop = stackPos === 0;
+            const scale = SCALES[stackPos] ?? 0.9;
+            const opacity = OPACITIES[stackPos] ?? 0.7;
+            const yOffset = stackPos * VERTICAL_OFFSET;
+
+            return (
+              <motion.div
+                key={idea.id}
+                layout
+                className="absolute top-0 left-0 right-0"
+                style={{
+                  zIndex: STACK_DEPTH - stackPos,
+                  transformOrigin: "top center",
+                  pointerEvents: isTop ? "auto" : "none",
+                }}
+                initial={
+                  stackPos === STACK_DEPTH - 1
+                    ? { scale: 0.85, opacity: 0 }
+                    : false
+                }
+                animate={{
+                  scale,
+                  y: yOffset,
+                  opacity,
+                }}
+                exit={{ scale: 0.85, opacity: 0, transition: { duration: 0.2 } }}
+                transition={{
+                  type: "spring",
+                  stiffness: 280,
+                  damping: 26,
+                }}
+              >
+                {isTransitioning && isTop ? (
+                  <SkeletonCard />
+                ) : (
+                  <CROCard
+                    idea={idea}
+                    onLike={handleLike}
+                    onDislike={handleDislike}
+                    disabled={!isTop || isTransitioning}
+                  />
+                )}
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
