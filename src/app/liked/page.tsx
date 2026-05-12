@@ -1,42 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import MockupImage from "@/components/MockupImage";
 import SkeletonCard from "@/components/SkeletonCard";
-
-interface CROIdea {
-  id: number;
-  title: string;
-  description: string;
-  reason: string;
-  purpose: string;
-  category: { id: number; name: string; slug: string };
-  mockupUrl: string | null;
-  createdAt: string;
-}
+import { useIdeas } from "@/lib/hooks/use-ideas";
+import { useUpdateIdea } from "@/lib/hooks/use-update-idea";
 
 export default function LikedPage() {
-  const [ideas, setIdeas] = useState<CROIdea[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const fetchLiked = async () => {
-    const res = await fetch("/api/ideas?status=liked");
-    const data = await res.json();
-    setIdeas(data);
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    fetchLiked();
-  }, []);
+  const { ideas, loading, refetch } = useIdeas("liked");
+  const { updateStatus } = useUpdateIdea();
 
   const moveToDislike = async (id: number) => {
-    await fetch(`/api/ideas/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status: "disliked" }),
-    });
-    setIdeas((prev) => prev.filter((i) => i.id !== id));
+    await updateStatus(id, "disliked");
+    refetch();
   };
 
   if (loading)

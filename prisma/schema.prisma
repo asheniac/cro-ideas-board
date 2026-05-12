@@ -14,20 +14,21 @@ enum CROIdeaStatus {
 }
 
 model CROIdea {
-  id            Int            @id @default(autoincrement())
-  title         String
-  description   String         @db.Text
-  reason        String         @db.Text
-  purpose       String         @db.Text
-  categoryId    Int
-  category      Category       @relation(fields: [categoryId], references: [id])
-  status        CROIdeaStatus  @default(pending)
-  batchId       String?
-  mockupUrl     String?
-  mockupPrompt  String?        @db.Text
-  sourceUrl     String?
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  id              Int            @id @default(autoincrement())
+  title           String
+  description     String         @db.Text
+  reason          String         @db.Text
+  purpose         String         @db.Text
+  categoryId      Int
+  category        Category       @relation(fields: [categoryId], references: [id])
+  status          CROIdeaStatus  @default(pending)
+  previousStatus  CROIdeaStatus?
+  batchId         String?
+  mockupUrl       String?
+  mockupPrompt    String?        @db.Text
+  sourceUrl       String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
 
   @@index([status])
   @@index([categoryId])
