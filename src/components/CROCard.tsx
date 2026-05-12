@@ -2,18 +2,7 @@
 
 import { useState } from "react";
 import MockupImage from "./MockupImage";
-
-interface CROIdea {
-  id: number;
-  title: string;
-  description: string;
-  reason: string;
-  purpose: string;
-  category: { id: number; name: string; slug: string };
-  status: string;
-  mockupUrl: string | null;
-  createdAt: string;
-}
+import type { CROIdea } from "@/lib/types";
 
 interface CROCardProps {
   idea: CROIdea;
