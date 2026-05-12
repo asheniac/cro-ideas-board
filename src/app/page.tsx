@@ -1,14 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import CROCard from "@/components/CROCard";
 import SkeletonCard from "@/components/SkeletonCard";
 import { useIdeas } from "@/lib/hooks/use-ideas";
 import { useUpdateIdea } from "@/lib/hooks/use-update-idea";
+import { useSwipeKeyboard } from "@/lib/hooks/use-swipe-keyboard";
 
 const STACK_DEPTH = 3;
 const VERTICAL_OFFSET = 15;
+const TOAST_DURATION = 5000;
 
 /** Scale and opacity per stack position (0 = top card) */
 const SCALES = [1.0, 0.95, 0.9];
@@ -17,45 +19,104 @@ const OPACITIES = [1, 0.85, 0.7];
 export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [toast, setToast] = useState<string | null>(null);
+  const [toast, setToast] = useState<{
+    message: string;
+    ideaId: number;
+  } | null>(null);
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { ideas, loading, error, refetch } = useIdeas("pending");
-  const { updateStatus } = useUpdateIdea();
+  const { updateStatus, undoStatus } = useUpdateIdea();
 
-  const showToast = (message: string) => {
-    setToast(message);
-    setTimeout(() => setToast(null), 4000);
-  };
+  const clearToast = useCallback(() => {
+    if (toastTimerRef.current) {
+      clearTimeout(toastTimerRef.current);
+      toastTimerRef.current = null;
+    }
+    setToast(null);
+  }, []);
 
-  const advanceCard = () => {
+  const showUndoToast = useCallback(
+    (message: string, ideaId: number) => {
+      clearToast();
+      setToast({ message, ideaId });
+      toastTimerRef.current = setTimeout(() => {
+        setToast(null);
+      }, TOAST_DURATION);
+    },
+    [clearToast]
+  );
+
+  const advanceCard = useCallback(() => {
     setCurrentIndex((prev) => prev + 1);
     setIsTransitioning(false);
-  };
+  }, []);
 
-  const handleLike = async (id: number) => {
-    if (isTransitioning) return;
-    setIsTransitioning(true);
-    try {
-      await updateStatus(id, "liked");
-      advanceCard();
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "Failed to like idea";
-      showToast(message);
-      setIsTransitioning(false);
-    }
-  };
+  const handleLike = useCallback(
+    async (id: number) => {
+      if (isTransitioning) return;
+      setIsTransitioning(true);
+      try {
+        await updateStatus(id, "liked");
+        advanceCard();
+        showUndoToast("Idea liked!", id);
+      } catch (err) {
+        const message =
+          err instanceof Error ? err.message : "Failed to like idea";
+        clearToast();
+        setToast({ message, ideaId: 0 });
+        setIsTransitioning(false);
+      }
+    },
+    [isTransitioning, updateStatus, advanceCard, showUndoToast, clearToast]
+  );
 
-  const handleDislike = async (id: number) => {
-    if (isTransitioning) return;
-    setIsTransitioning(true);
-    try {
-      await updateStatus(id, "disliked");
-      advanceCard();
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "Failed to dislike idea";
-      showToast(message);
-      setIsTransitioning(false);
-    }
-  };
+  const handleDislike = useCallback(
+    async (id: number) => {
+      if (isTransitioning) return;
+      setIsTransitioning(true);
+      try {
+        await updateStatus(id, "disliked");
+        advanceCard();
+        showUndoToast("Idea disliked!", id);
+      } catch (err) {
+        const message =
+          err instanceof Error ? err.message : "Failed to dislike idea";
+        clearToast();
+        setToast({ message, ideaId: 0 });
+        setIsTransitioning(false);
+      }
+    },
+    [isTransitioning, updateStatus, advanceCard, showUndoToast, clearToast]
+  );
+
+  const handleUndo = useCallback(
+    async (id: number) => {
+      clearToast();
+      try {
+        await undoStatus(id);
+        setCurrentIndex((prev) => Math.max(0, prev - 1));
+      } catch {
+        // Undo failed — silently ignore, user can manually re-like/dislike
+      }
+    },
+    [clearToast, undoStatus]
+  );
+
+  // Keyboard navigation (left = dislike, right = like)
+  useSwipeKeyboard({
+    onLike: () => {
+      const topCard = ideas[currentIndex];
+      if (topCard && !isTransitioning) {
+        handleLike(topCard.id);
+      }
+    },
+    onDislike: () => {
+      const topCard = ideas[currentIndex];
+      if (topCard && !isTransitioning) {
+        handleDislike(topCard.id);
+      }
+    },
+  });
 
   if (loading) {
     return (
@@ -150,10 +211,18 @@ export default function Home() {
 
   return (
     <div className="flex flex-col flex-1 items-center justify-center p-6">
-      {/* Toast notification for errors */}
+      {/* Undo toast at bottom of screen */}
       {toast && (
-        <div className="fixed top-4 right-4 z-50 bg-red-600 text-white px-4 py-3 rounded-lg shadow-lg text-sm max-w-sm">
-          {toast}
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 px-4 py-3 rounded-lg shadow-lg text-sm max-w-sm flex items-center gap-3">
+          <span>{toast.message}</span>
+          {toast.ideaId !== 0 && (
+            <button
+              onClick={() => handleUndo(toast.ideaId)}
+              className="font-semibold text-blue-400 dark:text-blue-600 hover:underline whitespace-nowrap"
+            >
+              Undo
+            </button>
+          )}
         </div>
       )}
 
