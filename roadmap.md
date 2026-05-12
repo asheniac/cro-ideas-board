@@ -50,7 +50,7 @@ Self-researching CRO board for samsung.com/au. Daily 3-5 CRO ideas with MiniMax 
 - ~~Merge `ares/m4-integration` → `main`~~
 - **Status: Complete.** All 5 critical fixes applied and merged to main.
 
-### M5: Daily Scheduling & Integration
+### 🔄 M5: Daily Scheduling & Integration (IN PROGRESS — evaluation complete)
 - Vercel Cron job for daily pipeline trigger
 - Full autonomous pipeline: research → generate → mockup → store
 - Unified pipeline runner (single entry point, not 2 separate scripts)
@@ -60,6 +60,7 @@ Self-researching CRO board for samsung.com/au. Daily 3-5 CRO ideas with MiniMax 
 - Environment variable validation at startup + health check endpoint
 - `.env.example` with all required vars
 - Final integration testing and deploy
+- **Evaluation:** Iris (CRO/UX), Theo (Architecture), Zara (Requirements) assessed M5 readiness. Codebase is ~70-75% ready. 12 deliverables identified. Key gaps: no unified pipeline, no retry logic, no dedup, no cron config, no health endpoint, MiniMax never tested with real API keys. Mobile needs 2 high-impact fixes (card height on small phones, haptic feedback). Auth bypass on generate endpoint still unfixed.
 
 ## Lessons Learned
 
@@ -96,3 +97,13 @@ Self-researching CRO board for samsung.com/au. Daily 3-5 CRO ideas with MiniMax 
 24. **No deduplication anywhere.** Schema has `batchId` for provenance but no dedup logic. M5 needs pre-generation prompt-based dedup + post-generation title similarity check.
 25. **Retry logic is completely absent.** LLM failures return empty array. MiniMax 429 throws but never retries. Every external API call needs a retry wrapper.
 26. **The types.ts unification is perfect (10/10).** Single source of truth, all components import from `@/lib/types`. No competing interfaces found.
+
+### From M5 Readiness Evaluation (Iris + Theo + Zara)
+27. **The codebase is solid M4 work with clear M5 gaps.** 70-75% ready for daily scheduling. The interactive UX is polished. The pipeline has the right architecture but lacks resilience (retry, dedup, unified runner).
+28. **No retry logic anywhere.** LLM failures return empty array. MiniMax 429 throws but never retries. Blob upload, image download — all fail on first attempt. A retry wrapper is the single highest-impact M5 addition.
+29. **Deduplication is completely absent.** Even with a real LLM, similar prompts produce similar ideas. Pre-generation (inject recent titles as negative examples) + post-generation (title similarity check) is the right approach. No schema changes needed.
+30. **The auth bypass on generate endpoint must be fixed.** `if (researchSecret && ...)` silently bypasses auth when env var is unset. The mockup endpoint's strict check is correct — copy that pattern.
+31. **MiniMax image quality is the biggest unknown risk.** The entire mockup pipeline has never been tested with real API keys. If MiniMax produces photorealistic products instead of UI mockups, the core value prop breaks. Verify this first in M5.
+32. **Mobile needs 2 high-impact quick fixes.** Card height clips on iPhone SE (fix: responsive `minHeight`). No haptic feedback on swipe (fix: `navigator.vibrate()`). Both are 3-line changes with outsized UX impact.
+33. **Vercel Cron is the clear scheduling choice.** Simpler than GitHub Actions, native Next.js integration. Pro tier (300s timeout) recommended for full pipeline with mockups. Hobby-compatible fallback: split into two jobs.
+34. **The mock LLM's 20 templates will exhaust quickly.** After 5-7 daily batches, ideas will repeat. Real LLM API keys are required for production. As a fallback, expand template pool to 100+ with systematic variations.
