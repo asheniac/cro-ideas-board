@@ -41,7 +41,7 @@ const IDEA_POOL: IdeaTemplate[] = [
       "Increase add-to-cart conversion rate on product pages by creating urgency through perceived scarcity, particularly during launch windows and promotional periods.",
     category: "urgency",
     mockupPrompt:
-      "Samsung AU Galaxy phone product buy page mockup, showing the sticky price bar (hubble-price-bar) at the bottom of the screen. Below the 'Add to Cart' CTA button, add a compact stock indicator: an orange/amber progress bar at 15% width, with text 'Only 8 left in stock — selling fast!' next to it. The price bar should show the full price of $2,199 AUD on the left, with the stock indicator prominently visible on the right side. Dark theme background, Samsung One UI style, mobile viewport.",
+      "UI mockup screenshot, Samsung AU Galaxy phone product buy page on mobile. Sticky bottom bar (hubble-price-bar) spanning full width with dark theme (#1A1A2E). Left: price '$2,199 AUD' in white. Center-right: orange progress bar at 15% fill with bold text 'Only 8 left — Selling fast!'. Far right: blue 'Add to Cart' button (#2189FF). Above the bar, blurred product page content visible. Clean Samsung One UI style. Mobile viewport 393×852.",
   },
   {
     title: "Add Countdown Timer for Limited-Time Promotions",
@@ -53,7 +53,7 @@ const IDEA_POOL: IdeaTemplate[] = [
       "Increase conversion rate during promotional periods by communicating offer expiration clearly and creating urgency to purchase now rather than later.",
     category: "urgency",
     mockupPrompt:
-      "Samsung AU product page showing the offer banner (hubble-offer-banner-v2) at the top. The banner has a dark navy background with white text reading 'Galaxy S26 Ultra Launch Offer — Save $300'. Below the headline, add a countdown timer showing '02d : 14h : 32m : 05s' in large white digits with subtle pulsing animation. The timer should have rounded pill-shaped containers for each time unit, in Samsung's signature blue accent color (#2189FF). Desktop viewport.",
+      "UI mockup screenshot, Samsung AU product page top section on desktop. Promotional banner (hubble-offer-banner-v2) with dark navy (#0A1628) background. White headline: 'Galaxy S26 Ultra Launch Offer — Save $300'. Below headline, a countdown timer row showing '02d : 14h : 32m : 05s' in large white digits inside rounded pill containers with blue (#2189FF) borders. Subtle pulsing glow on the seconds digits. Below the banner, product image and pricing partially visible. Desktop viewport 1440×900.",
   },
   {
     title: "Show 'Selling Fast' Badge on Popular Configurations",
@@ -65,7 +65,7 @@ const IDEA_POOL: IdeaTemplate[] = [
       "Increase configurator completion rate by reducing choice paralysis and guiding customers toward popular configurations, while also creating mild scarcity for in-demand options.",
     category: "urgency",
     mockupPrompt:
-      "Samsung AU Galaxy phone configurator (hubble-product__options). The color selection row shows 4 color circles: Titanium Black, Titanium Gray, Titanium Blue, Titanium Silver. The Titanium Black option has a small red-orange 'Selling Fast 🔥' badge with a subtle pulse animation floating above it. Storage options below show 256GB, 512GB (selected, highlighted), and 1TB. Clean white background, Samsung's product page layout. Desktop viewport showing the full options panel.",
+      "UI mockup screenshot, Samsung AU Galaxy phone configurator section on desktop. Color selection row with 4 color circles: Titanium Black (selected, blue ring), Titanium Gray, Titanium Blue, Titanium Silver. Above Titanium Black, a small floating red-orange 'Selling Fast 🔥' badge with subtle pulse animation. Below, storage options: 256GB, 512GB (highlighted with blue border), 1TB. Clean white background, Samsung's product page layout. Desktop viewport 1440×900.",
   },
 
   // ── Social Proof ──
@@ -79,7 +79,7 @@ const IDEA_POOL: IdeaTemplate[] = [
       "Increase product page engagement and add-to-cart rate by leveraging social validation — when customers see others are interested, they're more likely to convert.",
     category: "social-proof",
     mockupPrompt:
-      "Samsung AU Galaxy phone product buy page, top section. Below the product title 'Galaxy S26 Ultra' and star rating (4.8 ★★★★★ 2.3k reviews), add a subtle notification row: a small eye icon followed by '47 people are viewing this right now' in a soft gray-blue text (#6B7B8D). The number '47' should be slightly larger and bolder. Below that, the hubble-price-bar with pricing. Clean white background, Samsung's typography (Samsung One font). Desktop viewport, above the fold.",
+      "UI mockup screenshot, Samsung AU Galaxy phone product buy page top section on desktop. Below product title 'Galaxy S26 Ultra' and star rating row (4.8 ★★★★★ 2.3k reviews), a subtle notification line: eye icon 👁 followed by '47 people are viewing this right now' in gray-blue (#6B7B8D). The number '47' is bolder and slightly larger. Below notification, the hubble-price-bar with full pricing. Clean white background, Samsung One font. Desktop viewport 1440×900, above the fold.",
   },
   {
     title: "Add Star Ratings and Review Count to Category Product Cards",
@@ -91,7 +91,7 @@ const IDEA_POOL: IdeaTemplate[] = [
       "Increase click-through rate from category/listing pages to product detail pages by providing social proof at the earliest decision point, and improve the quality of traffic (pre-qualified by rating visibility).",
     category: "social-proof",
     mockupPrompt:
-      "Samsung AU smartphone category page showing a grid of 4 product cards. Each card has: product image (Galaxy S26 Ultra), product name, and now — below the name — a star rating row: '★★★★★ 4.8 (2,341 reviews)' in a compact format. One card shows 'Bestseller' badge in navy blue. Prices shown below with RRP strikethrough and sale price in bold. Clean white card design with subtle shadow, Samsung's product card layout. Desktop viewport.",
+      "UI mockup screenshot, Samsung AU smartphone category page with product grid on desktop. Grid of 4 product cards, each showing: device image (Galaxy S26 Ultra), product name, star rating row '★★★★★ 4.8 (2,341 reviews)', and pricing (RRP strikethrough + sale price in bold). One card shows navy 'Bestseller' badge. Clean white cards with subtle shadow, Samsung's product card layout. Desktop viewport 1440×900.",
   },
   {
     title: "Add 'Recently Purchased' Notification Toast",
@@ -103,7 +103,7 @@ const IDEA_POOL: IdeaTemplate[] = [
       "Increase conversion rate by building social validation and creating mild FOMO, particularly for customers who are comparing products or hesitating to purchase.",
     category: "social-proof",
     mockupPrompt:
-      "Samsung AU product page, bottom-left corner overlay. A small, elegant toast notification with a white background, subtle shadow, and rounded corners. Shows a small shopping bag icon and text: 'Someone in Melbourne just purchased Galaxy S26 Ultra' with a timestamp '2 min ago' in lighter gray. The notification has a subtle slide-up animation and a faint green checkmark. Samsung's clean design language, non-intrusive size. Below the main product content area.",
+      "UI mockup screenshot, Samsung AU product page bottom-left corner on desktop. Small elegant toast notification with white background, subtle shadow, rounded corners (8px). Shows shopping bag icon and text: 'Someone in Melbourne just purchased Galaxy S26 Ultra' with '2 min ago' in lighter gray below. Green checkmark on left. Toast has subtle slide-up entrance animation. Non-intrusive, positioned over product page content. Desktop viewport 1440×900.",
   },
 
   // ── UX ──
@@ -117,7 +117,7 @@ const IDEA_POOL: IdeaTemplate[] = [
       "Increase configurator completion rate and reduce drop-off by simplifying the decision process, particularly for mobile users where multi-step selection is more cumbersome.",
     category: "ux",
     mockupPrompt:
-      "Samsung AU product buy page, configurator section. Instead of separate color and storage selectors, show 3 preset cards in a horizontal row: 'Most Popular' (Titanium Black / 512GB / $2,199), 'Best Value' (Titanium Gray / 256GB / $1,899), 'Pro Choice' (Titanium Blue / 1TB / $2,499). Each card has a small product image showing the color, storage label, and price. Selected state has a blue border. Below the presets, a 'Customize Your Own' link. Clean white background. Desktop viewport.",
+      "UI mockup screenshot, Samsung AU product buy page configurator section on desktop. Instead of separate color/storage selectors, three preset cards in horizontal row: 'Most Popular' (Titanium Black / 512GB / $2,199), 'Best Value' (Titanium Gray / 256GB / $1,899), 'Pro Choice' (Titanium Blue / 1TB / $2,499). Each card shows small device image, storage label, and price. Selected card has blue (#2189FF) border. Below presets: 'Customize Your Own' text link. Clean white background. Desktop viewport 1440×900.",
   },
   {
     title: "Add 'Notify Me' for Out-of-Stock Configurations",
@@ -129,7 +129,7 @@ const IDEA_POOL: IdeaTemplate[] = [
       "Recapture demand from out-of-stock configurations by converting dead-end states into lead capture opportunities, and recover sales when stock returns.",
     category: "ux",
     mockupPrompt:
-      "Samsung AU product configurator (hubble-product__options). The color selector shows Titanium Black (available, selected), Titanium Gray (out of stock — instead of grayed out, shows a small 'Notify Me' button with a bell icon), Titanium Blue (available), Titanium Silver (available). The out-of-stock option has a subtle dashed border. A tooltip on hover says 'Expected back in stock: May 28'. Clean white background, Samsung's design system. Desktop viewport.",
+      "UI mockup screenshot, Samsung AU product configurator (hubble-product__options) on desktop. Color selector shows 4 color circles: Titanium Black (available, blue selected ring), Titanium Gray (out of stock — dashed border with small bell icon overlay and 'Notify Me' text below), Titanium Blue (available), Titanium Silver (available). Hover tooltip on out-of-stock option reads 'Expected back: May 28'. Clean white background, Samsung design system. Desktop viewport 1440×900.",
   },
   {
     title: "Add Sticky Mobile Bottom Bar for Key Actions",
@@ -141,7 +141,7 @@ const IDEA_POOL: IdeaTemplate[] = [
       "Increase mobile add-to-cart rate by ensuring the primary CTA is always accessible in the thumb-friendly zone, reducing the friction of scrolling back up to add to cart.",
     category: "mobile",
     mockupPrompt:
-      "Samsung AU mobile product page (iPhone 15 Pro viewport, 393x852). Bottom of screen shows a persistent sticky bar with dark background (#1A1A2E) containing: on the left, price '$2,199' with a smaller 'or from $91/mo with trade-in' below it; on the right, a large blue 'Add to Cart' button (full rounded, #2189FF) spanning about 45% of the bar width; between them, a small heart icon for 'Save'. Above the bar is the product image gallery and specs. Samsung's mobile design language.",
+      "UI mockup screenshot, Samsung AU mobile product page on iPhone 15 Pro viewport (393×852). Persistent sticky bottom bar with dark background (#1A1A2E) spanning full width. Left: price '$2,199' with smaller 'or from $91/mo with trade-in' below. Center: small heart/save icon. Right: large blue 'Add to Cart' button (#2189FF, rounded 24px) spanning ~45% of bar. Above the bar, product image gallery and specs partially visible. Samsung mobile design language, thumb-friendly touch targets.",
   },
 
   // ── Trust ──
@@ -155,7 +155,7 @@ const IDEA_POOL: IdeaTemplate[] = [
       "Reduce purchase anxiety and cart abandonment by prominently displaying trust and value assurances at the point of purchase consideration, before the user reaches the configurator.",
     category: "trust",
     mockupPrompt:
-      "Samsung AU Galaxy product buy page, section between product title/price and the configurator. A horizontal trust bar with 4 equally-spaced items, each with a simple line icon and short label: truck icon + 'Free Delivery', return arrow icon + '14-Day Returns', shield icon + 'Aus Warranty', star icon + '4.8 ★ (2.3k reviews)'. The bar has a very subtle light gray background (#F7F8FA) with 8px rounded corners, about 48px tall. Clean, minimal design. Desktop viewport.",
+      "UI mockup screenshot, Samsung AU Galaxy product buy page section between product title/price and configurator on desktop. Horizontal trust bar with light gray background (#F7F8FA), 8px rounded corners, 48px tall. 4 equally-spaced items in a row, each with simple line icon and short label: truck icon + 'Free Delivery', return arrow icon + '14-Day Returns', shield icon + 'Aus Warranty', star icon + '4.8 ★ (2.3k reviews)'. Clean minimal design. Desktop viewport 1440×900.",
   },
   {
     title: "Display Australian Warranty and Local Support Prominently",
@@ -167,7 +167,7 @@ const IDEA_POOL: IdeaTemplate[] = [
       "Increase conversion by differentiating Samsung's official AU store from gray-market alternatives (Kogan, eBay) and addressing a known Australian consumer concern about electronics warranty coverage.",
     category: "trust",
     mockupPrompt:
-      "Samsung AU product buy page, right sidebar or below configurator. A compact info box titled 'Why Buy Direct From Samsung Australia' with a subtle blue left border accent. Contains 3 bullet points with small icons: '🇦🇺 Genuine Australian Stock', '🛡️ Full Australian Warranty', '📞 Local Support (AEST hours)'. Below, a 'Learn More' link. The box has a light blue-tinted background (#F0F6FF) and rounded corners. Samsung's clean design. Desktop viewport.",
+      "UI mockup screenshot, Samsung AU product buy page right sidebar on desktop. Compact info box titled 'Why Buy Direct From Samsung Australia' with blue left border accent (#2189FF) and light blue-tinted background (#F0F6FF). 3 bullet points with small icons: '🇦🇺 Genuine Australian Stock', '🛡️ Full Australian Warranty', '📞 Local Support (AEST hours)'. 'Learn More' text link at bottom. Rounded corners, Samsung clean design. Desktop viewport 1440×900.",
   },
 
   // ── CTA ──
@@ -181,7 +181,7 @@ const IDEA_POOL: IdeaTemplate[] = [
       "Increase trade-in adoption rate and overall conversion by anchoring customers to the lower trade-in price, making the purchase feel more affordable and the trade-in feel like a loss if not used.",
     category: "cta",
     mockupPrompt:
-      "Samsung AU Galaxy S26 Ultra product buy page, hero pricing area. Instead of a single price, show: a strikethrough '$2,199' in gray above, and a large bold '$1,699' in Samsung blue (#2189FF) as the primary price. Next to the price, a small tag 'with trade-in' and a toggle switch to view full price. Below the price, small text: 'Save $500 when you trade in your old device'. The hubble-price-bar at the bottom also reflects the trade-in price. Clean white background. Desktop viewport, above the fold.",
+      "UI mockup screenshot, Samsung AU Galaxy S26 Ultra product buy page hero pricing area on desktop. Strikethrough '$2,199' in gray above. Large bold '$1,699' in Samsung blue (#2189FF) as primary price. Next to price, small tag 'with trade-in' and a toggle switch to view full price. Below price, small text: 'Save $500 when you trade in your old device'. Sticky hubble-price-bar at bottom also reflects trade-in price. Clean white background, above the fold. Desktop viewport 1440×900.",
   },
   {
     title: "Show Monthly Installment Price on Product Cards and Price Bar",
@@ -193,7 +193,7 @@ const IDEA_POOL: IdeaTemplate[] = [
       "Increase conversion by making high-ticket purchases feel more accessible through monthly price framing, particularly effective for price-sensitive AU shoppers who use BNPL services.",
     category: "cta",
     mockupPrompt:
-      "Samsung AU product card on a category/grid page. The card shows a Galaxy S26 Ultra image, product name, then pricing: 'RRP $2,199' in small strikethrough gray, 'Now $1,999' in bold black, and below that in Samsung blue: 'or from $83.29/mo with Afterpay' with a small Afterpay logo. The monthly price is the most visually prominent element after the product image. Clean white card with subtle shadow. Desktop viewport.",
+      "UI mockup screenshot, Samsung AU product card on category grid page, desktop. Card shows Galaxy S26 Ultra image (top), product name (below image), then pricing: small strikethrough gray 'RRP $2,199', bold black 'Now $1,999', and Samsung blue (#2189FF) 'or from $83.29/mo with Afterpay' with small Afterpay logo. Monthly price is visually prominent. Clean white card with subtle shadow, rounded corners. Desktop viewport 1440×900.",
   },
 
   // ── Bundle ──
@@ -207,7 +207,7 @@ const IDEA_POOL: IdeaTemplate[] = [
       "Increase average order value by presenting relevant ecosystem accessories at the moment of purchase, leveraging the customer's commitment to the Samsung ecosystem.",
     category: "bundle",
     mockupPrompt:
-      "Samsung AU Galaxy phone product buy page, section below the configurator and above the add-to-cart button. A 'Complete Your Galaxy Experience' section with 3 horizontal product cards: Galaxy Buds3 Pro ($349, with 'Seamless auto-switching'), Galaxy Watch7 ($549, with 'Syncs with Samsung Health'), 45W Charger ($49, with 'Super Fast Charging'). Each card has a small product image, short description, price, and an 'Add' checkbox. At the bottom: 'Bundle Total: $2,197 — Save $150' with an 'Add All to Cart' button. Clean white background. Desktop viewport.",
+      "UI mockup screenshot, Samsung AU Galaxy phone product buy page, section below configurator on desktop. 'Complete Your Galaxy Experience' section with 3 horizontal product cards: Galaxy Buds3 Pro ($349, 'Seamless auto-switching'), Galaxy Watch7 ($549, 'Syncs with Samsung Health'), 45W Charger ($49, 'Super Fast Charging'). Each card: small product image, short description, price, checkbox 'Add'. Bottom summary: 'Bundle Total: $2,197 — Save $150' with 'Add All to Cart' blue button (#2189FF). Clean white background. Desktop viewport 1440×900.",
   },
   {
     title: "Add Progressive Bundle Upsell in Cart",
@@ -219,7 +219,7 @@ const IDEA_POOL: IdeaTemplate[] = [
       "Increase average order value by capturing post-commitment momentum with relevant accessory upsells, at both the moment of add-to-cart and on the cart page.",
     category: "bundle",
     mockupPrompt:
-      "Samsung AU post-add-to-cart experience. After clicking 'Add to Cart' on a Galaxy S26 Ultra product page, a small modal slides up from the bottom (mobile) or appears centered (desktop). 'Added to Cart! 🎉' with a checkmark. Below, 'Complete your setup:' with 3 small product cards: Galaxy Buds3 Pro ($349, 'Save $50 when bundled'), 45W Charger ($49), Silicone Case ($69). Each has a small image and an 'Add' button. A 'No thanks, go to cart' link at the bottom. Samsung's clean design, white modal with subtle shadow. Mobile viewport.",
+      "UI mockup screenshot, Samsung AU post-add-to-cart modal on mobile (393×852). Small modal slides up from bottom after clicking 'Add to Cart' on Galaxy S26 Ultra page. Header: 'Added to Cart! 🎉' with green checkmark. Body: 'Complete your setup:' with 3 small product cards: Galaxy Buds3 Pro ($349, 'Save $50 when bundled'), 45W Charger ($49), Silicone Case ($69). Each has small image and 'Add' button. Bottom: 'No thanks, go to cart' text link. White modal with subtle shadow, rounded top corners, Samsung clean design.",
   },
 
   // ── Personalization ──
@@ -233,7 +233,7 @@ const IDEA_POOL: IdeaTemplate[] = [
       "Reduce bounce rate from comparison shoppers and increase conversion by making it easy to return to previously viewed products, shortening the comparison-to-purchase path.",
     category: "personalization",
     mockupPrompt:
-      "Samsung AU product page, bottom section (below reviews). A 'Recently Viewed' horizontal carousel with left/right navigation arrows. Shows 4 product cards in a row: Galaxy S26 Ultra (current), Galaxy Z Fold6, Galaxy S26, Galaxy Watch7. Each card shows a small product image, product name, price, and a small 'View' button. The currently viewed product has a subtle 'You are here' indicator. Clean white background with section title 'Recently Viewed' in Samsung's heading style. Desktop viewport.",
+      "UI mockup screenshot, Samsung AU product page bottom section on desktop. 'Recently Viewed' horizontal carousel with left/right arrow navigation. 4 product cards in row: Galaxy S26 Ultra (current, subtle 'You are here' indicator), Galaxy Z Fold6, Galaxy S26, Galaxy Watch7. Each card: small product image, product name, price, small 'View' button. Section title 'Recently Viewed' in Samsung heading style. Clean white background. Desktop viewport 1440×900.",
   },
   {
     title: "Personalize Homepage Hero Based on Visitor History",
@@ -245,7 +245,7 @@ const IDEA_POOL: IdeaTemplate[] = [
       "Increase homepage engagement and click-through rate by showing visitors content relevant to their demonstrated interests, reducing the time to find relevant products.",
     category: "personalization",
     mockupPrompt:
-      "Samsung AU homepage hero banner (hd08-hero-kv-home). Full-width dark background with a Galaxy S26 Ultra device image on the right. Text overlay on the left: 'Your Galaxy upgrade awaits' (personalized headline based on browsing history), 'Trade in your old phone and save up to $500 on the Galaxy S26 Ultra'. Two CTA buttons: 'Shop Now' (primary, blue) and 'Check Trade-In Value' (secondary, outlined). A small 'Based on your interests' label at the top-left. Samsung's dark premium hero style. Desktop viewport.",
+      "UI mockup screenshot, Samsung AU homepage hero banner (hd08-hero-kv-home) on desktop. Full-width dark background with Galaxy S26 Ultra device image on right. Text overlay left: 'Your Galaxy upgrade awaits' (personalized headline), 'Trade in your old phone and save up to $500 on the Galaxy S26 Ultra'. Two CTA buttons: 'Shop Now' (primary, blue #2189FF) and 'Check Trade-In Value' (secondary, white outlined). Small 'Based on your interests' label top-left. Samsung dark premium hero style. Desktop viewport 1440×900.",
   },
 
   // ── Navigation ──
@@ -259,7 +259,7 @@ const IDEA_POOL: IdeaTemplate[] = [
       "Reduce cart abandonment and increase cart revisit rate by making cart contents and value visible without requiring a full page navigation to the separate shop.samsung.com/au domain.",
     category: "navigation",
     mockupPrompt:
-      "Samsung AU global navigation bar (nv00-gnb-v4), top-right section. The cart icon (shopping bag) has a small red badge showing '2'. On hover, a dropdown appears below the icon showing: 'Your Cart (2 items)' header, two small product thumbnails (Galaxy S26 Ultra and Galaxy Buds3 Pro), subtotal '$2,548', and a blue 'View Cart →' button. The dropdown has a white background, subtle shadow, and 8px rounded corners. Samsung's clean nav style. Desktop viewport.",
+      "UI mockup screenshot, Samsung AU global navigation bar (nv00-gnb-v4) top-right section on desktop. Cart icon (shopping bag) with small red badge showing '2'. Hover state: dropdown below icon with white background, subtle shadow, 8px rounded corners. Header: 'Your Cart (2 items)'. Two small product thumbnails: Galaxy S26 Ultra and Galaxy Buds3 Pro. Subtotal '$2,548'. Blue 'View Cart →' button (#2189FF). Samsung clean nav style. Desktop viewport 1440×900.",
   },
 
   // ── Checkout ──
@@ -273,7 +273,7 @@ const IDEA_POOL: IdeaTemplate[] = [
       "Increase average order value by motivating customers to reach the free shipping threshold, and reduce checkout abandonment by providing clear progress visibility.",
     category: "checkout",
     mockupPrompt:
-      "Samsung AU cart page (shop.samsung.com/au/cart). At the top of the cart, a horizontal progress bar. For a cart at $1,899: the bar is at ~75% width with a blue filled portion, and text above reads 'Only $101 away from FREE delivery! Add a case or charger to qualify.' A 'Shop Accessories' link next to it. Below the bar, a 3-step indicator: '① Cart' (active/highlighted) → '② Shipping' → '③ Payment' in a horizontal row. Clean white background. Desktop viewport.",
+      "UI mockup screenshot, Samsung AU cart page (shop.samsung.com/au/cart) on desktop. Top of cart: horizontal progress bar at ~75% filled (blue #2189FF). Text above: 'Only $101 away from FREE delivery! Add a case or charger to qualify.' with 'Shop Accessories' link. Below bar: 3-step indicator '① Cart' (highlighted blue) → '② Shipping' → '③ Payment' in horizontal row. Below, cart line items visible. Clean white background. Desktop viewport 1440×900.",
   },
   {
     title: "Implement Exit-Intent Modal for Cart Page",
@@ -285,7 +285,7 @@ const IDEA_POOL: IdeaTemplate[] = [
       "Recover abandoning cart sessions by offering value (discount, trade-in reminder, save-for-later) at the moment of exit, reducing the overall cart abandonment rate.",
     category: "checkout",
     mockupPrompt:
-      "Samsung AU cart page exit-intent overlay. A centered modal with white background and subtle shadow. Header: 'Before you go...' with a friendly tone. Body: 3 options presented as cards — '💾 Save your cart for later' (enter email), '💰 Check your trade-in value' (could save up to $500), '🎁 Add a Galaxy Buds3 Pro and save $50'. Each card has a CTA button. A small 'No thanks, I'll come back later' text link at the bottom. Non-aggressive, Samsung's clean design. Desktop viewport.",
+      "UI mockup screenshot, Samsung AU cart page exit-intent overlay on desktop. Centered modal with white background and subtle shadow, rounded corners. Header: 'Before you go...' in friendly tone. Body: 3 option cards in horizontal row — '💾 Save your cart for later' (email input + button), '💰 Check your trade-in value' (could save up to $500), '🎁 Add Galaxy Buds3 Pro and save $50'. Each card has CTA button. Small 'No thanks, I'll come back later' text link at bottom. Samsung clean design, non-aggressive. Desktop viewport 1440×900.",
   },
 ];
 

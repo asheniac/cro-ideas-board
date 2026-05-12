@@ -10,3 +10,19 @@ export {
   BEST_PRACTICES,
   OPPORTUNITY_ZONES,
 } from "./knowledge-base";
+export {
+  generateImage,
+  generateImages,
+  buildMockupPrompt,
+  UI_MOCKUP_NEGATIVE_PROMPT,
+  DEFAULT_ASPECT_RATIO,
+  DEFAULT_MODEL,
+  MiniMaxAPIError,
+  MiniMaxAuthError,
+  MiniMaxRateLimitError,
+} from "./minimax-client";
+export type {
+  MiniMaxImageOptions,
+  MiniMaxImageResult,
+  AspectRatio,
+} from "./minimax-client";
