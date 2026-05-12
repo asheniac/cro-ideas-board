@@ -1,5 +1,22 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  // ─── Cron Jobs ─────────────────────────────────────────────────────────
+  // Daily pipeline run at 9:00 AM UTC:
+  //   1. Generate 4 CRO ideas via LLM (Anthropic/OpenAI)
+  //   2. Store in DB with batchId = pipelineRunId
+  //   3. Generate mockup images via MiniMax + persist to Vercel Blob
+  //   4. Handle partial failures: ideas stored even if mockups fail
+  //
+  // Auth: Vercel cron sends Authorization: Bearer <CRON_SECRET> header.
+  // The API route checks this against RESEARCH_SECRET env var.
+  // Set CRON_SECRET to the same value as RESEARCH_SECRET in Vercel env vars.
+  //
+  // ⚠️  Timeout: Vercel Hobby plan has a 60-second function timeout.
+  // The full pipeline (LLM + MiniMax + Blob uploads) may exceed this.
+  // If timeouts occur, either:
+  //   a) Upgrade to Pro tier (300s timeout)
+  //   b) Split into separate cron jobs: generate (fast) + mockup (slow)
+  //
   "crons": [
     {
       "path": "/api/pipeline/run",
