@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import MockupImage from "@/components/MockupImage";
+import SkeletonCard from "@/components/SkeletonCard";
 
 interface CROIdea {
   id: number;
@@ -37,7 +39,21 @@ export default function DislikePage() {
     setIdeas((prev) => prev.filter((i) => i.id !== id));
   };
 
-  if (loading) return <p className="p-8 text-zinc-500">Loading...</p>;
+  if (loading)
+    return (
+      <div className="max-w-4xl mx-auto p-6">
+        <div className="mb-8">
+          <div className="h-8 w-48 rounded bg-zinc-200 dark:bg-zinc-700 animate-pulse" />
+          <div className="h-5 w-24 rounded bg-zinc-100 dark:bg-zinc-800 animate-pulse mt-2" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <SkeletonCard />
+          <SkeletonCard />
+          <SkeletonCard />
+          <SkeletonCard />
+        </div>
+      </div>
+    );
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -72,15 +88,11 @@ export default function DislikePage() {
               key={idea.id}
               className="bg-white dark:bg-zinc-900 rounded-xl shadow border border-zinc-200 dark:border-zinc-800 overflow-hidden"
             >
-              {idea.mockupUrl && (
-                <div className="h-40 bg-zinc-100">
-                  <img
-                    src={idea.mockupUrl}
-                    alt={idea.title}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              )}
+              <MockupImage
+                  src={idea.mockupUrl}
+                  alt={idea.title}
+                  className="h-40"
+                />
               <div className="p-4">
                 <span className="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300">
                   {idea.category.name}

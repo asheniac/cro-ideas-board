@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import MockupImage from "./MockupImage";
 
 interface CROIdea {
   id: number;
@@ -46,15 +47,10 @@ export default function CROCard({ idea, onLike, onDislike }: CROCardProps) {
     >
       <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-lg border border-zinc-200 dark:border-zinc-800 overflow-hidden">
         {/* Mockup Image */}
-        {idea.mockupUrl && (
-          <div className="relative w-full h-56 bg-zinc-100 dark:bg-zinc-800">
-            <img
-              src={idea.mockupUrl}
-              alt={idea.title}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        )}
+        <MockupImage
+          src={idea.mockupUrl}
+          alt={idea.title}
+        />
 
         {/* Content */}
         <div className="p-6">
