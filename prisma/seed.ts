@@ -1,8 +1,15 @@
+import "dotenv/config";
 import { PrismaClient } from "../src/generated/prisma/client";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 
+const databaseUrl = process.env.DATABASE_URL;
+if (!databaseUrl) {
+  console.error("DATABASE_URL is not set. Ensure .env file exists.");
+  process.exit(1);
+}
+
 const prisma = new PrismaClient({
-  adapter: new PrismaMariaDb(process.env.DATABASE_URL!),
+  adapter: new PrismaMariaDb(databaseUrl),
 });
 
 const categories = [
