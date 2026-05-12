@@ -6,7 +6,7 @@
  */
 export async function downloadImage(url: string): Promise<Buffer> {
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, { signal: AbortSignal.timeout(30_000) });
 
     if (!response.ok) {
       throw new Error(
