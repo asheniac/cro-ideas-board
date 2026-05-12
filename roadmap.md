@@ -26,7 +26,7 @@ Self-researching CRO board for samsung.com/au. Daily 3-5 CRO ideas with MiniMax 
 - ~~Mockup display, loading states, fallback on API failure~~
 - **Status: Complete.** Apollo VERIFY_PASS. 8 deliverables verified: MiniMax client with full error handling, Vercel Blob storage, POST /api/research/mockup route, CLI batch script (--idea-id, --batch, --all-pending), MockupImage (3 states), SkeletonCard, prompt cleanup (80-120 words, no animation descriptors), tsx in devDependencies. TypeScript compiles clean (tsconfig needs minor fix — see M4 prep).
 
-### ⚠️ M4: Frontend Polish — Swipe Gestures & UX
+### ✅ M4: Frontend Polish — Swipe Gestures & UX
 - ~~Add Framer Motion for drag-to-swipe gesture (Tinder-like)~~
 - ~~Card stack depth effect (next card peeking underneath)~~
 - ~~Undo last action functionality~~
@@ -39,16 +39,16 @@ Self-researching CRO board for samsung.com/au. Daily 3-5 CRO ideas with MiniMax 
 - ~~Add `previousStatus` field to Prisma schema for undo support~~
 - ~~Add undo API endpoint~~
 - ~~Create custom hooks (useIdeas, useUpdateIdea, useSwipeKeyboard)~~
-- **Status: Code complete in `ares/m4-integration` branch, not yet merged.** Athena's team evaluated: Iris (UX: 7.5/10), Theo (M5 readiness: 70%), Zara (spec gap analysis: 8 met, 3 partial, 2 unmet). **4 critical issues found** — see M4.1.
+- **Status: Complete.** All M4 features built and merged to main via M4.1. Swipe exit animation fixed (onAnimationComplete), card stack at 40px offset with differentiated shadows, mobile safe-area padding applied, auth bypass fixed (strict check), category upsert race condition fixed. TypeScript compiles cleanly.
 
-### 🔄 M4.1: Fix Critical M4 Issues & Merge (CURRENT)
-- Fix swipe exit animation (card snaps back instead of flying off-screen) — Iris finding #1
-- Improve card stack visibility (increase vertical offset to 40px, differentiate shadows)
-- Add safe-area padding for mobile (env(safe-area-inset-bottom) on toast + portal buttons)
-- Fix auth bypass on generate endpoint (inconsistent `!researchSecret` check vs mockup route)
-- Fix category upsert race condition (findUnique+create → upsert)
-- Merge `ares/m4-integration` → `main`
-- **Cycles budget: 5**
+### ✅ M4.1: Fix Critical M4 Issues & Merge
+- ~~Fix swipe exit animation (card snaps back instead of flying off-screen)~~
+- ~~Improve card stack visibility (increase vertical offset to 40px, differentiate shadows)~~
+- ~~Add safe-area padding for mobile (env(safe-area-inset-bottom) on toast + portal buttons)~~
+- ~~Fix auth bypass on generate endpoint (inconsistent `!researchSecret` check vs mockup route)~~
+- ~~Fix category upsert race condition (findUnique+create → upsert)~~
+- ~~Merge `ares/m4-integration` → `main`~~
+- **Status: Complete.** All 5 critical fixes applied and merged to main.
 
 ### M5: Daily Scheduling & Integration
 - Vercel Cron job for daily pipeline trigger
