@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { motion, useMotionValue, useTransform } from "framer-motion";
+import { motion, useMotionValue, useTransform, animate } from "framer-motion";
 import MockupImage from "./MockupImage";
 import type { CROIdea } from "@/lib/types";
 
@@ -61,26 +61,24 @@ export default function CROCard({ idea, onLike, onDislike, disabled = false }: C
 
       if (flewRight) {
         setDecided("like");
-        setTimeout(() => onLike(idea.id), 300);
       } else if (flewLeft) {
         setDecided("dislike");
-        setTimeout(() => onDislike(idea.id), 300);
+      } else {
+        // Snap back to center
+        animate(x, 0, { type: "spring", stiffness: 300, damping: 25 });
       }
-      // Otherwise, spring-back is handled automatically by dragConstraints
     },
-    [isInteractive, onLike, onDislike, idea.id]
+    [isInteractive, x]
   );
 
   const handleLike = () => {
     if (!isInteractive) return;
     setDecided("like");
-    setTimeout(() => onLike(idea.id), 300);
   };
 
   const handleDislike = () => {
     if (!isInteractive) return;
     setDecided("dislike");
-    setTimeout(() => onDislike(idea.id), 300);
   };
 
   // Action buttons rendered via portal for fixed bottom positioning
@@ -116,20 +114,25 @@ export default function CROCard({ idea, onLike, onDislike, disabled = false }: C
       <motion.div
         className="relative w-full max-w-md mx-auto touch-pan-y"
         drag={isInteractive ? "x" : false}
-        dragConstraints={{ left: 0, right: 0 }}
-        dragElastic={0.7}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
+        onAnimationComplete={() => {
+          if (decided === "like") {
+            onLike(idea.id);
+          } else if (decided === "dislike") {
+            onDislike(idea.id);
+          }
+        }}
         animate={
           decided === "like"
-            ? { x: 500, opacity: 0, rotate: 25 }
+            ? { x: 800, opacity: 0, rotate: 30 }
             : decided === "dislike"
-            ? { x: -500, opacity: 0, rotate: -25 }
+            ? { x: -800, opacity: 0, rotate: -30 }
             : {}
         }
         transition={
           decided
-            ? { duration: 0.3, ease: "easeOut" }
+            ? { duration: 0.4, ease: "easeOut" }
             : { type: "spring", stiffness: 300, damping: 25 }
         }
         style={{
