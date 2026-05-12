@@ -1,52 +1,14 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useState } from "react";
 import CROCard from "@/components/CROCard";
-
-interface CROIdea {
-  id: number;
-  title: string;
-  description: string;
-  reason: string;
-  purpose: string;
-  category: { id: number; name: string; slug: string };
-  status: string;
-  mockupUrl: string | null;
-  createdAt: string;
-}
+import { useIdeas } from "@/lib/hooks/use-ideas";
+import { useUpdateIdea } from "@/lib/hooks/use-update-idea";
 
 export default function Home() {
-  const [ideas, setIdeas] = useState<CROIdea[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchIdeas = useCallback(async () => {
-    try {
-      setLoading(true);
-      const res = await fetch("/api/ideas?status=pending");
-      if (!res.ok) throw new Error("Failed to fetch");
-      const data = await res.json();
-      setIdeas(data);
-      setCurrentIndex(0);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to load ideas");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchIdeas();
-  }, [fetchIdeas]);
-
-  const updateStatus = async (id: number, status: string) => {
-    await fetch(`/api/ideas/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status }),
-    });
-  };
+  const { ideas, loading, error, refetch } = useIdeas("pending");
+  const { updateStatus } = useUpdateIdea();
 
   const handleLike = (id: number) => {
     updateStatus(id, "liked");
@@ -72,7 +34,7 @@ export default function Home() {
         <div className="text-center">
           <p className="text-red-500 mb-4">{error}</p>
           <button
-            onClick={fetchIdeas}
+            onClick={refetch}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
             Retry
