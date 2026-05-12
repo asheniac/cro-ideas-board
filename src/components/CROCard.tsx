@@ -60,8 +60,10 @@ export default function CROCard({ idea, onLike, onDislike, disabled = false }: C
         info.offset.x < -SWIPE_THRESHOLD || info.velocity.x < -SWIPE_VELOCITY;
 
       if (flewRight) {
+        navigator.vibrate?.(10);
         setDecided("like");
       } else if (flewLeft) {
+        navigator.vibrate?.(10);
         setDecided("dislike");
       } else {
         // Snap back to center

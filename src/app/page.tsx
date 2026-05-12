@@ -92,6 +92,7 @@ export default function Home() {
   const handleUndo = useCallback(
     async (id: number) => {
       clearToast();
+      navigator.vibrate?.([10, 30, 10]);
       try {
         await undoStatus(id);
         setCurrentIndex((prev) => Math.max(0, prev - 1));
@@ -214,7 +215,7 @@ export default function Home() {
       {/* Undo toast at bottom of screen */}
       {toast && (
         <div
-          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 px-4 py-3 rounded-lg shadow-lg text-sm max-w-sm flex items-center gap-3"
+          className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 px-4 py-3 rounded-lg shadow-lg text-sm max-w-sm flex items-center gap-3"
           style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
         >
           <span>{toast.message}</span>
@@ -236,7 +237,7 @@ export default function Home() {
       </div>
 
       {/* Card stack container */}
-      <div className="relative w-full max-w-md" style={{ minHeight: "520px" }}>
+      <div className="relative w-full max-w-md" style={{ minHeight: "min(520px, calc(100vh - 200px))" }}>
         <AnimatePresence mode="popLayout">
           {stackCards.map(({ idea, stackPos }) => {
             const isTop = stackPos === 0;
