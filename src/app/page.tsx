@@ -2,22 +2,48 @@
 
 import { useState } from "react";
 import CROCard from "@/components/CROCard";
+import SkeletonCard from "@/components/SkeletonCard";
 import { useIdeas } from "@/lib/hooks/use-ideas";
 import { useUpdateIdea } from "@/lib/hooks/use-update-idea";
 
 export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
   const { ideas, loading, error, refetch } = useIdeas("pending");
   const { updateStatus } = useUpdateIdea();
 
-  const handleLike = (id: number) => {
-    updateStatus(id, "liked");
-    setCurrentIndex((prev) => prev + 1);
+  const showToast = (message: string) => {
+    setToast(message);
+    setTimeout(() => setToast(null), 4000);
   };
 
-  const handleDislike = (id: number) => {
-    updateStatus(id, "disliked");
-    setCurrentIndex((prev) => prev + 1);
+  const handleLike = async (id: number) => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    try {
+      await updateStatus(id, "liked");
+      setCurrentIndex((prev) => prev + 1);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Failed to like idea";
+      showToast(message);
+    } finally {
+      setIsTransitioning(false);
+    }
+  };
+
+  const handleDislike = async (id: number) => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    try {
+      await updateStatus(id, "disliked");
+      setCurrentIndex((prev) => prev + 1);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Failed to dislike idea";
+      showToast(message);
+    } finally {
+      setIsTransitioning(false);
+    }
   };
 
   if (loading) {
@@ -104,16 +130,31 @@ export default function Home() {
 
   return (
     <div className="flex flex-col flex-1 items-center justify-center p-6">
+      {/* Toast notification for errors */}
+      {toast && (
+        <div className="fixed top-4 right-4 z-50 bg-red-600 text-white px-4 py-3 rounded-lg shadow-lg text-sm max-w-sm">
+          {toast}
+        </div>
+      )}
+
       <div className="text-center mb-6">
         <p className="text-sm text-zinc-500">
           {currentIndex + 1} of {ideas.length}
         </p>
       </div>
-      <CROCard
-        idea={ideas[currentIndex]}
-        onLike={handleLike}
-        onDislike={handleDislike}
-      />
+
+      {isTransitioning ? (
+        <div className="w-full max-w-md mx-auto">
+          <SkeletonCard />
+        </div>
+      ) : (
+        <CROCard
+          idea={ideas[currentIndex]}
+          onLike={handleLike}
+          onDislike={handleDislike}
+          disabled={isTransitioning}
+        />
+      )}
     </div>
   );
 }

@@ -9,12 +9,13 @@ interface CROCardProps {
   idea: CROIdea;
   onLike: (id: number) => void;
   onDislike: (id: number) => void;
+  disabled?: boolean;
 }
 
 const SWIPE_THRESHOLD = 100;
 const SWIPE_VELOCITY = 500;
 
-export default function CROCard({ idea, onLike, onDislike }: CROCardProps) {
+export default function CROCard({ idea, onLike, onDislike, disabled = false }: CROCardProps) {
   const [expanded, setExpanded] = useState(false);
   const [decided, setDecided] = useState<"like" | "dislike" | null>(null);
 
@@ -34,10 +35,14 @@ export default function CROCard({ idea, onLike, onDislike }: CROCardProps) {
   const likeStampOpacity = useTransform(x, [0, 100], [0, 1]);
   const nopeStampOpacity = useTransform(x, [-100, 0], [1, 0]);
 
+  const isInteractive = !disabled && !decided;
+
   const handleDragEnd = (
     _: MouseEvent | TouchEvent | PointerEvent,
     info: { offset: { x: number }; velocity: { x: number } }
   ) => {
+    if (!isInteractive) return;
+
     const flewRight =
       info.offset.x > SWIPE_THRESHOLD || info.velocity.x > SWIPE_VELOCITY;
     const flewLeft =
@@ -54,11 +59,13 @@ export default function CROCard({ idea, onLike, onDislike }: CROCardProps) {
   };
 
   const handleLike = () => {
+    if (!isInteractive) return;
     setDecided("like");
     setTimeout(() => onLike(idea.id), 300);
   };
 
   const handleDislike = () => {
+    if (!isInteractive) return;
     setDecided("dislike");
     setTimeout(() => onDislike(idea.id), 300);
   };
@@ -66,7 +73,7 @@ export default function CROCard({ idea, onLike, onDislike }: CROCardProps) {
   return (
     <motion.div
       className="relative w-full max-w-md mx-auto"
-      drag={decided ? false : "x"}
+      drag={isInteractive ? "x" : false}
       dragConstraints={{ left: 0, right: 0 }}
       dragElastic={0.7}
       onDragEnd={handleDragEnd}
@@ -162,14 +169,16 @@ export default function CROCard({ idea, onLike, onDislike }: CROCardProps) {
       <div className="flex justify-center gap-6 mt-5">
         <button
           onClick={handleDislike}
-          className="w-14 h-14 rounded-full bg-white dark:bg-zinc-800 shadow-lg border border-zinc-200 dark:border-zinc-700 flex items-center justify-center text-2xl hover:scale-110 transition-transform hover:border-red-400"
+          disabled={!isInteractive}
+          className="w-14 h-14 rounded-full bg-white dark:bg-zinc-800 shadow-lg border border-zinc-200 dark:border-zinc-700 flex items-center justify-center text-2xl hover:scale-110 transition-transform hover:border-red-400 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:border-zinc-200 dark:disabled:hover:border-zinc-700"
           aria-label="Dislike"
         >
           ❌
         </button>
         <button
           onClick={handleLike}
-          className="w-14 h-14 rounded-full bg-white dark:bg-zinc-800 shadow-lg border border-zinc-200 dark:border-zinc-700 flex items-center justify-center text-2xl hover:scale-110 transition-transform hover:border-green-400"
+          disabled={!isInteractive}
+          className="w-14 h-14 rounded-full bg-white dark:bg-zinc-800 shadow-lg border border-zinc-200 dark:border-zinc-700 flex items-center justify-center text-2xl hover:scale-110 transition-transform hover:border-green-400 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:border-zinc-200 dark:disabled:hover:border-zinc-700"
           aria-label="Like"
         >
           ❤️
