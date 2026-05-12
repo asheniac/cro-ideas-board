@@ -54,20 +54,16 @@ async function saveToDatabase(ideas: GeneratedCROIdea[]): Promise<string> {
   const batchId = `batch-${Date.now()}`;
 
   for (const idea of ideas) {
-    let category = await prisma.category.findUnique({
+    const name = idea.category
+      .split("-")
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ");
+
+    const category = await prisma.category.upsert({
       where: { slug: idea.category },
+      update: {},
+      create: { name, slug: idea.category },
     });
-
-    if (!category) {
-      const name = idea.category
-        .split("-")
-        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-        .join(" ");
-
-      category = await prisma.category.create({
-        data: { name, slug: idea.category },
-      });
-    }
 
     await prisma.cROIdea.create({
       data: {
