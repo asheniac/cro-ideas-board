@@ -7,28 +7,38 @@ datasource db {
   provider = "mysql"
 }
 
+enum CROIdeaStatus {
+  pending
+  liked
+  disliked
+}
+
 model CROIdea {
-  id          Int      @id @default(autoincrement())
-  title       String
-  description String   @db.Text
-  reason      String   @db.Text
-  purpose     String   @db.Text
-  category    String   @default("general")
-  status      String   @default("pending") // pending, liked, disliked
-  mockupUrl   String?
-  sourceUrl   String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            Int            @id @default(autoincrement())
+  title         String
+  description   String         @db.Text
+  reason        String         @db.Text
+  purpose       String         @db.Text
+  categoryId    Int
+  category      Category       @relation(fields: [categoryId], references: [id])
+  status        CROIdeaStatus  @default(pending)
+  batchId       String?
+  mockupUrl     String?
+  mockupPrompt  String?        @db.Text
+  sourceUrl     String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 
   @@index([status])
-  @@index([category])
+  @@index([categoryId])
   @@index([createdAt])
 }
 
 model Category {
-  id   Int    @id @default(autoincrement())
-  name String @unique
-  slug String @unique
+  id      Int       @id @default(autoincrement())
+  name    String    @unique
+  slug    String    @unique
+  ideas   CROIdea[]
 
   @@index([slug])
 }

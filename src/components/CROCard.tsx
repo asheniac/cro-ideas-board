@@ -8,7 +8,7 @@ interface CROIdea {
   description: string;
   reason: string;
   purpose: string;
-  category: string;
+  category: { id: number; name: string; slug: string };
   status: string;
   mockupUrl: string | null;
   createdAt: string;
@@ -60,7 +60,7 @@ export default function CROCard({ idea, onLike, onDislike }: CROCardProps) {
         <div className="p-6">
           <div className="flex items-center gap-2 mb-3">
             <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300">
-              {idea.category}
+              {idea.category.name}
             </span>
           </div>
           <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-2">

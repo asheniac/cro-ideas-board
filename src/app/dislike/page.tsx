@@ -8,7 +8,7 @@ interface CROIdea {
   description: string;
   reason: string;
   purpose: string;
-  category: string;
+  category: { id: number; name: string; slug: string };
   mockupUrl: string | null;
   createdAt: string;
 }
@@ -83,7 +83,7 @@ export default function DislikePage() {
               )}
               <div className="p-4">
                 <span className="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300">
-                  {idea.category}
+                  {idea.category.name}
                 </span>
                 <h3 className="text-lg font-semibold mt-2 text-zinc-900 dark:text-zinc-50">
                   {idea.title}

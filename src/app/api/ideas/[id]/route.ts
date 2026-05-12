@@ -9,6 +9,7 @@ export async function GET(
   const { id } = await params;
   const idea = await prisma.cROIdea.findUnique({
     where: { id: parseInt(id) },
+    include: { category: true },
   });
 
   if (!idea) {
@@ -31,6 +32,7 @@ export async function PATCH(
     data: {
       status: body.status,
     },
+    include: { category: true },
   });
 
   return NextResponse.json(idea);

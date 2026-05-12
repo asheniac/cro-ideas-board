@@ -7,7 +7,8 @@ export async function GET(request: NextRequest) {
   const status = searchParams.get("status") || "pending";
 
   const ideas = await prisma.cROIdea.findMany({
-    where: { status },
+    where: { status: status as "pending" | "liked" | "disliked" },
+    include: { category: true },
     orderBy: { createdAt: "desc" },
   });
 
@@ -24,10 +25,13 @@ export async function POST(request: NextRequest) {
       description: body.description,
       reason: body.reason,
       purpose: body.purpose,
-      category: body.category || "general",
+      categoryId: body.categoryId,
       mockupUrl: body.mockupUrl || null,
+      mockupPrompt: body.mockupPrompt || null,
       sourceUrl: body.sourceUrl || null,
+      batchId: body.batchId || null,
     },
+    include: { category: true },
   });
 
   return NextResponse.json(idea, { status: 201 });

@@ -9,7 +9,7 @@ interface CROIdea {
   description: string;
   reason: string;
   purpose: string;
-  category: string;
+  category: { id: number; name: string; slug: string };
   status: string;
   mockupUrl: string | null;
   createdAt: string;
