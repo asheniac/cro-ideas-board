@@ -12,14 +12,14 @@ Self-researching CRO board for samsung.com/au. Daily 3-5 CRO ideas with MiniMax 
 - ~~Design schema and component tree~~
 - **Status: Complete.** Iris delivered detailed Samsung AU analysis (20+ components, 10 opportunity zones). Theo delivered full architecture (Next.js + Prisma + Vercel). Zara identified blockers and gaps.
 
-### M2: Idea Generation Pipeline — LLM + Seed Data (CURRENT)
-- Build LLM-based CRO idea generator module using Iris's research as knowledge base
-- Fix Prisma schema issues (status enum, category FK relation, batch tracking)
-- Create seed script that generates 3-5 CRO ideas with full structure
-- Populate database with initial ideas so frontend has content
-- Verify ideas display correctly in existing swipe/liked/dislike UI
+### ✅ M2: Idea Generation Pipeline — LLM + Seed Data
+- ~~Build LLM-based CRO idea generator module using Iris's research as knowledge base~~
+- ~~Fix Prisma schema issues (status enum, category FK relation, batch tracking)~~
+- ~~Create seed script that generates CRO ideas with full structure~~
+- ~~Frontend pages: swipe, liked, dislike with full CRUD~~
+- **Status: Complete.** All code compiles clean. Generator module with pluggable LLM clients (Claude, GPT-4o, Mock). Knowledge base embedding Iris's full research. 20 high-quality mock LLM template ideas (rated 8/10 by Iris review). Prompts with Samsung AU-specific context. API route with secret auth. Seed script with 10 Samsung-specific ideas. CLI script for manual generation. Frontend features: card swipe (button-based), like/dislike, liked/disliked pages with move-between, category badges, expandable details. TypeScript compiles cleanly.
 
-### M3: MiniMax Image API Integration
+### M3: MiniMax Image API Integration (CURRENT)
 - Integrate MiniMax Image API for mockup generation
 - Generate mockups for existing and new ideas
 - Store images in Vercel Blob
@@ -49,3 +49,10 @@ Self-researching CRO board for samsung.com/au. Daily 3-5 CRO ideas with MiniMax 
 4. **MiniMax needs testing first.** Before committing to full integration, test the API with 10+ UI mockup prompts to assess quality. Have a placeholder fallback.
 5. **Start with curated seed, not live scraping.** Use Iris's detailed site analysis to ground the LLM. Add live scraping as a v2 enhancement once the core flow works.
 6. **3-5 ideas/day is realistic** — LLM generation ~15s/idea, MiniMax ~20s/image. Batch of 5 ideas ≈ 3-5 minutes total with parallel execution.
+
+### From M2 Pipeline
+7. **Mock LLM templates are production-quality.** Iris's CRO review rated 14/20 templates excellent or good. Templates cover 10 categories with deep Samsung AU specificity (AU pricing, Afterpay, trade-in program, Australian warranty).
+8. **Gap: comparison tools.** No templates cover product comparison or "Help Me Choose" quizzes — critical for electronics e-commerce. Should be addressed in future batches.
+9. **Gap: mobile depth.** Only 1/20 templates targets mobile specifically despite mobile traffic dominance. Needs more coverage.
+10. **Mockup prompts need cleanup for production.** Remove animation descriptors, add aspect ratios, add negative prompts, trim to 80-120 words before feeding to MiniMax.
+11. **Missing dependency.** `tsx` is not in devDependencies but is needed for seed and CLI scripts (`npx tsx prisma/seed.ts`, `npx tsx scripts/generate-ideas.ts`).
