@@ -13,6 +13,7 @@ export interface CROIdea {
   purpose: string;
   category: { id: number; name: string; slug: string };
   status: string;
+  previousStatus: string | null;
   mockupUrl: string | null;
   createdAt: string;
 }
