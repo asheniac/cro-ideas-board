@@ -20,9 +20,15 @@ export async function POST(request: NextRequest) {
 
     // ── Auth check ──
     const researchSecret = process.env.RESEARCH_SECRET;
-    if (researchSecret && body.secret !== researchSecret) {
+    if (!researchSecret || !body.secret) {
       return NextResponse.json(
-        { error: "Unauthorized — invalid or missing secret" },
+        { error: "Unauthorized — secret is required" },
+        { status: 401 }
+      );
+    }
+    if (body.secret !== researchSecret) {
+      return NextResponse.json(
+        { error: "Unauthorized — invalid secret" },
         { status: 401 }
       );
     }
@@ -46,22 +52,17 @@ export async function POST(request: NextRequest) {
 
     for (const idea of ideas) {
       try {
-        // Find or create the category
-        let category = await prisma.category.findUnique({
+        // Upsert category (avoids TOCTOU race condition)
+        const name = idea.category
+          .split("-")
+          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(" ");
+
+        const category = await prisma.category.upsert({
           where: { slug: idea.category },
+          update: {},
+          create: { name, slug: idea.category },
         });
-
-        if (!category) {
-          // Build a proper name from the slug
-          const name = idea.category
-            .split("-")
-            .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-            .join(" ");
-
-          category = await prisma.category.create({
-            data: { name, slug: idea.category },
-          });
-        }
 
         await prisma.cROIdea.create({
           data: {

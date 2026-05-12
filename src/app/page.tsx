@@ -9,7 +9,7 @@ import { useUpdateIdea } from "@/lib/hooks/use-update-idea";
 import { useSwipeKeyboard } from "@/lib/hooks/use-swipe-keyboard";
 
 const STACK_DEPTH = 3;
-const VERTICAL_OFFSET = 15;
+const VERTICAL_OFFSET = 40;
 const TOAST_DURATION = 5000;
 
 /** Scale and opacity per stack position (0 = top card) */
@@ -213,7 +213,10 @@ export default function Home() {
     <div className="flex flex-col flex-1 items-center justify-center p-6">
       {/* Undo toast at bottom of screen */}
       {toast && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 px-4 py-3 rounded-lg shadow-lg text-sm max-w-sm flex items-center gap-3">
+        <div
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 px-4 py-3 rounded-lg shadow-lg text-sm max-w-sm flex items-center gap-3"
+          style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
+        >
           <span>{toast.message}</span>
           {toast.ideaId !== 0 && (
             <button
@@ -241,15 +244,24 @@ export default function Home() {
             const opacity = OPACITIES[stackPos] ?? 0.7;
             const yOffset = stackPos * VERTICAL_OFFSET;
 
+            // Differentiated shadows for lower cards
+            const boxShadow =
+              stackPos === 1
+                ? "0 8px 30px rgba(0,0,0,0.12)"
+                : stackPos === 2
+                  ? "0 12px 40px rgba(0,0,0,0.18)"
+                  : undefined;
+
             return (
               <motion.div
                 key={idea.id}
                 layout
-                className="absolute top-0 left-0 right-0"
+                className="absolute top-0 left-0 right-0 rounded-2xl"
                 style={{
                   zIndex: STACK_DEPTH - stackPos,
                   transformOrigin: "top center",
                   pointerEvents: isTop ? "auto" : "none",
+                  boxShadow,
                 }}
                 initial={
                   stackPos === STACK_DEPTH - 1

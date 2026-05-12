@@ -85,7 +85,10 @@ export default function CROCard({ idea, onLike, onDislike, disabled = false }: C
   const actionButtons =
     typeof document !== "undefined"
       ? createPortal(
-          <div className="fixed bottom-6 left-0 right-0 z-40 flex justify-between px-6 pointer-events-none">
+          <div
+            className="fixed bottom-6 left-0 right-0 z-40 flex justify-between px-6 pointer-events-none"
+            style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
+          >
             {/* Dislike — left thumb */}
             <button
               onClick={handleDislike}
