@@ -301,6 +301,94 @@ const IDEA_POOL: IdeaTemplate[] = [
     negativePrompt: UI_MOCKUP_NEGATIVE_PROMPT,
   },
 
+  // ── Mobile: Mega Menu ──
+  {
+    title: "Redesign Mobile Navigation as Full-Screen Card Menu",
+    description:
+      "Replace the current multi-level hamburger dropdown (nv00-gnb-v4 mobile variant) with a full-screen overlay navigation showing top-level categories as large touch-friendly cards with icons and product preview thumbnails. Each card represents a key category: Smartphones, TVs, Audio, Watches, Tablets, Computing. Tapping a card expands inline subcategories instead of pushing to a new panel. Include a prominent trade-in shortcut card and a 'Current Offers' card. The menu should have a sticky bottom section with account, store locator, and support links.",
+    reason:
+      "Samsung's mobile navigation uses a traditional multi-level hamburger menu that requires 3+ taps to reach a product category, creating significant friction. Mobile users account for growing share of Samsung AU traffic. Baymard Institute research shows that flat, card-based navigation with visual cues reduces abandonment by 15-20% compared to nested accordion menus. Samsung's product portfolio spans multiple categories — a visually rich card layout helps users discover cross-category products they may not have considered.",
+    purpose:
+      "Reduce navigation abandonment and increase category page visits from mobile by simplifying the menu to a single-level card layout with visual product cues, reducing the average taps-to-product from 3+ to 1-2.",
+    category: "mobile",
+    mockupPrompt:
+      "UI mockup screenshot, Samsung AU mobile full-screen navigation overlay on iPhone 15 Pro viewport (393×852). Dark semi-transparent overlay (#0A1628 at 95% opacity) covering the entire screen. Top section: white 'Samsung' wordmark logo centered, with '✕' close button (24px, white, top-right with 24px margin). Below: grid of 6 category cards in 2 columns with 12px gaps — Smartphones (Galaxy S26 Ultra thumbnail image centered, 'Smartphones' label in 15px white Samsung One bold below, blue #2189FF 2px bottom accent line), TVs, Audio, Watches, Tablets, Computing. Each card: 160px × 130px, dark card background (#162447), 12px rounded corners, icon or small product image (80px) centered, text label centered below. Bottom row has 2 special cards: '📱 Trade-In' (with orange #FF6B35 accent) and '🎁 Offers' (with green #4CAF50 accent). Sticky bottom bar (64px) on the overlay with 3 white icons and labels: '👤 Account', '📍 Store Finder', '💬 Support' — evenly spaced, 12px white text. Viewport 393×852.",
+    aspectRatio: "9:16",
+    negativePrompt: UI_MOCKUP_NEGATIVE_PROMPT,
+  },
+  {
+    title: "Streamline Mobile Checkout to Single-Page with Address Autofill",
+    description:
+      "Redesign the mobile checkout flow on shop.samsung.com/au/checkout from a multi-step process into a single-scroll page. All sections (shipping address, delivery method, payment, order review) are displayed on one page with collapsible accordion sections. Integrate Google Address Autofill for Australian addresses. Each section has large touch-friendly form fields (minimum 48px height), and a sticky bottom bar shows the running order total with a prominent 'Place Order' CTA. Include Afterpay and PayPal express checkout options at the top as accelerated payment shortcuts.",
+    reason:
+      "Multi-step checkout on mobile has significantly higher abandonment — Baymard Institute data shows 21% of users abandon due to 'too long/complicated checkout.' Samsung's checkout is on a separate subdomain (shop.samsung.com/au) which already adds friction. Compression to a single page with address autofill can reduce checkout time by 40-60% on mobile. Australian-specific address autofill eliminates typing postcodes/suburbs, a common pain point.",
+    purpose:
+      "Increase mobile checkout completion rate by reducing the number of steps and eliminating typing friction through address autofill and express payment shortcuts, targeting the 393×852 viewport specifically.",
+    category: "mobile",
+    mockupPrompt:
+      "UI mockup screenshot, Samsung AU mobile checkout page on iPhone 15 Pro viewport (393×852). Single-scroll checkout layout with white background (#FFF). Top header: 'Checkout' in 18px Samsung One bold #111 centered, with back arrow left. Below header: two express payment buttons side by side (176px × 48px each) — 'PayPal' (blue #0070BA fill, white text 14px, 8px rounded) and 'Afterpay' (mint #B2FCE4 fill, dark text, 8px rounded). Section 1 expanded: 'Shipping Address' in 14px bold #333 with form fields — Full Name, Street Address, Suburb, State dropdown, Postcode — each 48px height, 8px rounded, 1px #D0D0D0 border, 16px internal padding, 14px #333 text. 'Use current location 📍' link in 13px #2189FF below. Section 2 collapsed (accordion): 'Delivery Method' with chevron ▼. Section 3 collapsed: 'Payment'. Collapsed sections show summary: 'Free Standard Delivery' in 13px #666. Sticky bottom bar: dark (#1A1A2E) 60px full-width with order total '$1,949' in 18px white bold left, and blue 'Place Order' button (#2189FF) 160px wide, 48px height, white 15px bold right. Above sticky bar: trust row '🔒 Secure Checkout' and '🛡️ Australian Warranty' in 11px #999 centered. Viewport 393×852.",
+    aspectRatio: "9:16",
+    negativePrompt: UI_MOCKUP_NEGATIVE_PROMPT,
+  },
+  {
+    title: "Redesign Mobile Product Cards with Key Specs and Swipe Actions",
+    description:
+      "Redesign the offers-product-card-grid product cards for mobile category pages (393×852 viewport) to show more decision-critical information without increasing vertical height. Each card should include: product image (60% of card height), product name, star rating with review count, 2-3 key spec badges (e.g., '200MP Camera', '6.8\" Display', '5,000mAh'), price with trade-in estimate, and a swipe-left gesture that reveals a quick 'Compare' and 'Save' action. Cards should be full-width on mobile with 8px rounded corners and subtle shadow.",
+    reason:
+      "Samsung's mobile product cards currently show only image + name + price, forcing users to tap into each product page to evaluate specs. This creates high bounce rates from the PLP as users open 5+ tabs to compare. Displaying key differentiators (camera, battery, screen) and ratings directly on cards enables faster decision-making. Swipe actions for quick compare/favorite add utility without cluttering the card UI — similar to iOS Mail/Tinder interaction patterns that mobile users are familiar with.",
+    purpose:
+      "Increase click-through quality (pre-qualified by spec visibility) and reduce bounce rate on mobile category pages by giving users enough information to shortlist products without leaving the listing page.",
+    category: "mobile",
+    mockupPrompt:
+      "UI mockup screenshot, Samsung AU smartphone category page on iPhone 15 Pro viewport (393×852). Vertical stack of 2 full-width product cards with 12px gap. Each card: white background, 8px rounded corners, subtle shadow (rgba 0,0,0,0.08, 0px 2px 8px), 16px internal padding. Card 1 (top): Galaxy S26 Ultra image centered (200px, device in Titanium Black), product name 'Galaxy S26 Ultra' in 17px Samsung One bold #111, gold stars '★★★★★ 4.8 (2,341 reviews)' in 13px with star emoji (#FFB800), 3 inline spec badges with light gray (#F0F2F5) rounded 4px pill backgrounds — '📷 200MP' '📱 6.8\"' '🔋 5,000mAh' — each 11px #555 text, 4px horizontal gap. Pricing row: 'RRP $2,199' strikethrough 13px #999, 'Now $1,949' 18px bold #111, 'or $81/mo' 13px #2189FF. Swipe hint: subtle right-arrow icon overlayed at right edge 20px at 30% opacity, suggesting swipeable action. Card 2 (below): Galaxy S26 in Silver with similar layout, specs '📷 50MP' '📱 6.2\"' '🔋 4,000mAh', price '$1,299'. Pinned filter bar at top: 'Filter' chip, 'Sort' dropdown, showing '12 products'. Viewport 393×852.",
+    aspectRatio: "9:16",
+    negativePrompt: UI_MOCKUP_NEGATIVE_PROMPT,
+  },
+  {
+    title: "Add Mobile Trade-In Value Slider Widget to Product Pages",
+    description:
+      "Add a compact, collapsible trade-in value estimator widget directly below the hubble-price-bar on mobile product pages. The widget uses a simple horizontal slider for device condition (Poor → Fair → Good → Like New) and auto-detects the user's current device model (or lets them select from top 10 traded-in devices). The widget shows an instant estimated trade-in value and recalculates the total price. The widget is collapsed by default with a teaser row: '💰 Trade in your old phone — save up to $500' and expands inline (no modal) on tap, pushing page content down smoothly.",
+    reason:
+      "Samsung's trade-in program is a major conversion driver but currently requires navigating to a separate calculator or scrolling to the configurator toggle. On mobile, this friction is amplified — users must find the trade-in toggle within the configurator, which is often below the fold. An inline, always-visible widget makes the value proposition immediate. Mobile users are 2x more likely to abandon multi-step forms, so an inline expandable widget with a single slider dramatically reduces friction.",
+    purpose:
+      "Increase mobile trade-in adoption rate by surfacing the trade-in value proposition immediately after the price bar, with an ultra-simple single-slider interface that eliminates form-filling and page navigation.",
+    category: "mobile",
+    mockupPrompt:
+      "UI mockup screenshot, Samsung AU Galaxy S26 Ultra product buy page on iPhone 15 Pro viewport (393×852). Below the hubble-price-bar (price '$2,199' and blue 'Add to Cart' button), a collapsible widget section. Collapsed state row (48px height, light blue #F0F6FF background, 8px rounded corners, 12px padding): money bag emoji 💰 left, 'Trade in your old phone — save up to $500' text in 14px Samsung One #333, chevron-down icon ▼ right in #2189FF. Expanded state (pushing content down): white card with 1px #E0E0E0 border, 8px rounded. Header: 'Estimate Your Trade-In Value' in 15px bold #111 with ✕ close. Auto-detected device label: 'Your device: iPhone 14 Pro' in 13px #555 with 'Change' link in #2189FF. Large condition slider row: horizontal gradient bar from red (#FF3B30, 'Poor') through orange (#FF9500, 'Fair') through yellow (#FFCC00, 'Good') to green (#34C759, 'Like New'), 48px height, 24px rounded, with white circular thumb (24px) at ~75% position ('Good' condition). Estimated value display: large '$450' in 28px green (#34C759) bold Samsung One with 'estimated trade-in value' in 11px #999 below. Recalculated total: 'Your price: $1,749' in 18px bold #111 (crossed-out $2,199 in 13px #999). Blue 'Apply Trade-In' button (#2189FF, full width, 48px height). Viewport 393×852.",
+    aspectRatio: "9:16",
+    negativePrompt: UI_MOCKUP_NEGATIVE_PROMPT,
+  },
+
+  // ── Comparison Tools ──
+  {
+    title: "Add 'Help Me Choose' Interactive Quiz to Smartphone Category Pages",
+    description:
+      "Add an interactive 'Help Me Choose Your Galaxy' quiz widget to the top of the smartphone category page (/au/smartphones/all-smartphones/) and as a CTA on the homepage explore carousel. The quiz asks 4 simple questions: (1) What's your budget? (range slider), (2) What matters most? (tappable cards: Camera, Battery Life, Screen Size, Performance), (3) Do you use a stylus? (Yes/No with S Pen image), (4) Do you prefer compact or large phones? (visual toggle with device silhouettes). After answering, it recommends the best Galaxy model with a 'See Your Match' result card showing the recommended device, key matching features, price, and a prominent 'Buy Now' CTA.",
+    reason:
+      "Samsung's smartphone lineup (S26, S26+, S26 Ultra, Z Fold, Z Flip, A-series) creates significant choice paralysis for customers. Research from Baymard Institute shows that 46% of e-commerce users struggle with product selection when faced with 5+ similar options. An interactive quiz reduces cognitive load by guiding users to 1-2 options based on their needs, not specs. Competitors like Apple use in-store specialists for this — online, a quiz is the equivalent. JB Hi-Fi doesn't offer this on their mobile site, giving Samsung a differentiator.",
+    purpose:
+      "Increase smartphone category-to-product page conversion rate by reducing choice paralysis through guided discovery, and improve the quality of product page traffic by matching users to the right device before they reach the buy page.",
+    category: "personalization",
+    mockupPrompt:
+      "UI mockup screenshot, Samsung AU smartphone category page top section on desktop. 'Help Me Choose Your Galaxy' quiz widget in a centered card (800px wide) with white background, soft shadow, 12px rounded corners. Header: 'Not sure which Galaxy is right for you?' in 20px Samsung One bold #111 with 'Take our 30-second quiz →' in 14px. Quiz step 1 (visible): 'What's your budget?' with horizontal range slider (blue #2189FF track, 4px height, white circular thumb with 2px #2189FF border) ranging $500–$3,000, current value '$1,500' displayed in 16px bold #111 above thumb. Step indicators below as 4 small dots (●●○○) with '1 of 4' in 11px #999. Below slider: 3 tappable budget preset pills — 'Under $1,000', '$1,000–$2,000', 'No limit' — in 28px rounded pills, light gray fill (#F5F5F5), 13px #333. Quiz progress bar (2px, #2189FF at 25% fill) at very top of card. Footer of card: 'Skip quiz, see all phones →' text link in 13px #999. Category grid partially visible below the quiz card. Desktop viewport 1440×900.",
+    aspectRatio: "16:9",
+    negativePrompt: UI_MOCKUP_NEGATIVE_PROMPT,
+  },
+  {
+    title: "Add Side-by-Side Galaxy Comparison Table with Sticky Headers",
+    description:
+      "Add a dynamic product comparison feature accessible from smartphone category pages and individual product pages. The comparison table shows key specifications for up to 3 Galaxy models side by side in a responsive table with sticky left-column headers and sticky column headers on mobile. Key comparison rows include: price, display size/type, camera system, processor, battery, storage options, 5G support, and special features (S Pen, DeX, etc.). Each row highlights the 'winner' with a subtle blue background. Include a 'Where to Buy' or 'Add to Cart' button row at the bottom of each column.",
+    reason:
+      "Product comparison is the #1 missing feature in Samsung AU's e-commerce experience. Customers comparing Galaxy S26 vs S26+ vs S26 Ultra currently must open 3+ tabs and manually compare. Research shows comparison tools can increase conversion by 20-30% for electronics because they build confidence in the purchase decision. This is especially important for Samsung's lineup where the price difference between base and Ultra models is $700+ — customers need clear justification for the upsell.",
+    purpose:
+      "Increase conversion rate and average order value by enabling confident purchase decisions through transparent, easy-to-scan specification comparison, reducing the need for external research and tab-switching.",
+    category: "ux",
+    mockupPrompt:
+      "UI mockup screenshot, Samsung AU product comparison page on desktop. 3-column comparison table with sticky header row. Left column: dark header (#1A1A2E) with 'Compare Galaxy Models' in white 18px bold. Row labels column (200px wide, gray #F7F8FA background) with 15 rows: Price, Display, Camera, Processor, Battery, Storage, 5G, Special Features, Rating — each 40px height, 13px Samsung One #555 with light right border. 3 device columns (300px each): Galaxy S26, Galaxy S26+, Galaxy S26 Ultra. Each column header: device image (120px centered on white), device name in 15px bold #111, starting price in 16px bold #2189FF. Comparison rows with 1px #EEE borders. Winner cells highlighted with subtle blue tint (#F0F6FF) and small '✓ Best' badge in 10px #2189FF. Price row: S26 '$1,299' / S26+ '$1,599' / S26 Ultra '$1,949'. Display row: '6.2\" FHD+' / '6.7\" QHD+' / '6.8\" QHD+ (winner blue tint)'. Camera row: '50MP Triple' / '50MP Triple' / '200MP Quad (✓ Best)'. Bottom row: blue 'Add to Cart' buttons (#2189FF, 44px height) in each column. 'Add models to compare' dropdown selectors above the table. Desktop viewport 1440×900.",
+    aspectRatio: "16:9",
+    negativePrompt: UI_MOCKUP_NEGATIVE_PROMPT,
+  },
+
   // ── Checkout ──
   {
     title: "Add Cart Progress Indicator with Free Shipping Threshold",
