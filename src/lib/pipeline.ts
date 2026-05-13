@@ -67,7 +67,37 @@ export async function runPipeline(
 
   let ideas: GeneratedCROIdea[] = [];
   try {
-    ideas = await generateCROIdeas({ count });
+    // ── Fetch recent titles for dedup (last 30 days) ──
+    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    let existingTitles: string[] = [];
+    try {
+      const recentIdeas = await prisma.cROIdea.findMany({
+        where: { createdAt: { gte: thirtyDaysAgo } },
+        select: { title: true },
+        orderBy: { createdAt: "desc" },
+        take: 100,
+      });
+      existingTitles = recentIdeas.map((i) => i.title);
+      console.log(
+        JSON.stringify({
+          event: "dedup_titles_fetched",
+          pipelineRunId,
+          count: existingTitles.length,
+        }),
+      );
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.warn(
+        JSON.stringify({
+          event: "dedup_fetch_warning",
+          pipelineRunId,
+          error: msg,
+        }),
+      );
+      // Non-fatal — proceed without dedup titles
+    }
+
+    ideas = await generateCROIdeas({ count, existingTitles });
     console.log(
       JSON.stringify({
         event: "ideas_generated",

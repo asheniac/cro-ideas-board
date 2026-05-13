@@ -36,8 +36,25 @@ export async function POST(request: NextRequest) {
     // ── Parse parameters ──
     const count = typeof body.count === "number" ? Math.max(3, Math.min(5, body.count)) : 4;
 
+    // ── Fetch recent titles for dedup (last 30 days) ──
+    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    let existingTitles: string[] = [];
+    try {
+      const recentIdeas = await prisma.cROIdea.findMany({
+        where: { createdAt: { gte: thirtyDaysAgo } },
+        select: { title: true },
+        orderBy: { createdAt: "desc" },
+        take: 100,
+      });
+      existingTitles = recentIdeas.map((i) => i.title);
+      console.log(`[API] Fetched ${existingTitles.length} recent titles for dedup`);
+    } catch (err) {
+      console.warn("[API] Failed to fetch recent titles for dedup:", err);
+      // Non-fatal — proceed without dedup titles
+    }
+
     // ── Generate ideas ──
-    const ideas = await generateCROIdeas({ count });
+    const ideas = await generateCROIdeas({ count, existingTitles });
 
     if (ideas.length === 0) {
       return NextResponse.json(
