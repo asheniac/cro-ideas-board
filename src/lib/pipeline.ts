@@ -18,6 +18,7 @@ import {
 } from "@/lib/research/minimax-client";
 import { downloadImage } from "@/lib/storage/download";
 import { uploadImageToBlob } from "@/lib/storage/blob";
+import { log } from "@/lib/utils/logger";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -53,38 +54,28 @@ export async function runPipeline(
   const errors: string[] = [];
   const startTime = Date.now();
 
-  console.log(
-    JSON.stringify({
-      event: "pipeline_start",
-      pipelineRunId,
-      count,
-      dryRun: options.dryRun || false,
-      timestamp: new Date().toISOString(),
-    }),
-  );
+  log("info", "pipeline_start", {
+    pipelineRunId,
+    count,
+    dryRun: options.dryRun || false,
+  });
 
   // ── Step 1: Generate CRO Ideas ────────────────────────────────────────
 
   let ideas: GeneratedCROIdea[] = [];
   try {
     ideas = await generateCROIdeas({ count });
-    console.log(
-      JSON.stringify({
-        event: "ideas_generated",
-        pipelineRunId,
-        count: ideas.length,
-      }),
-    );
+    log("info", "ideas_generated", {
+      pipelineRunId,
+      count: ideas.length,
+    });
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error);
     errors.push(`generate: ${msg}`);
-    console.error(
-      JSON.stringify({
-        event: "generate_error",
-        pipelineRunId,
-        error: msg,
-      }),
-    );
+    log("error", "generate_error", {
+      pipelineRunId,
+      error: msg,
+    });
     return {
       pipelineRunId,
       ideasGenerated: 0,
@@ -110,13 +101,10 @@ export async function runPipeline(
   // ── Dry run: skip storage and mockups ─────────────────────────────────
 
   if (options.dryRun) {
-    console.log(
-      JSON.stringify({
-        event: "pipeline_dry_run_complete",
-        pipelineRunId,
-        ideas: ideas.length,
-      }),
-    );
+    log("info", "pipeline_dry_run_complete", {
+      pipelineRunId,
+      ideas: ideas.length,
+    });
     return {
       pipelineRunId,
       ideasGenerated: ideas.length,
@@ -160,23 +148,17 @@ export async function runPipeline(
     } catch (error) {
       const msg = error instanceof Error ? error.message : String(error);
       errors.push(`store: ${msg}`);
-      console.error(
-        JSON.stringify({
-          event: "store_error",
-          pipelineRunId,
-          error: msg,
-        }),
-      );
+      log("error", "store_error", {
+        pipelineRunId,
+        error: msg,
+      });
     }
   }
 
-  console.log(
-    JSON.stringify({
-      event: "ideas_stored",
-      pipelineRunId,
-      stored: storedIdeaIds.length,
-    }),
-  );
+  log("info", "ideas_stored", {
+    pipelineRunId,
+    stored: storedIdeaIds.length,
+  });
 
   // ── Step 3: Generate mockups for each stored idea ─────────────────────
 
@@ -199,13 +181,10 @@ export async function runPipeline(
       if (!idea.mockupPrompt) {
         mockupsFailed++;
         errors.push(`mockup: idea ${ideaId} has no mockupPrompt`);
-        console.warn(
-          JSON.stringify({
-            event: "mockup_skip_no_prompt",
-            pipelineRunId,
-            ideaId,
-          }),
-        );
+        log("warn", "mockup_skip_no_prompt", {
+          pipelineRunId,
+          ideaId,
+        });
         continue;
       }
 
@@ -223,14 +202,11 @@ export async function runPipeline(
       } catch (error) {
         const msg = error instanceof Error ? error.message : String(error);
         errors.push(`mockup: idea ${ideaId} MiniMax: ${msg}`);
-        console.error(
-          JSON.stringify({
-            event: "mockup_minimax_error",
-            pipelineRunId,
-            ideaId,
-            error: msg,
-          }),
-        );
+        log("error", "mockup_minimax_error", {
+          pipelineRunId,
+          ideaId,
+          error: msg,
+        });
         mockupsFailed++;
         continue; // Partial failure: idea is already stored, just skip mockup
       }
@@ -265,14 +241,11 @@ export async function runPipeline(
       });
 
       mockupsSucceeded++;
-      console.log(
-        JSON.stringify({
-          event: "mockup_generated",
-          pipelineRunId,
-          ideaId,
-          mockupUrl: blobUrl,
-        }),
-      );
+      log("info", "mockup_generated", {
+        pipelineRunId,
+        ideaId,
+        mockupUrl: blobUrl,
+      });
     } catch (error) {
       const msg = error instanceof Error ? error.message : String(error);
       errors.push(`mockup: idea ${ideaId}: ${msg}`);
@@ -282,17 +255,13 @@ export async function runPipeline(
 
   const totalDuration = Date.now() - startTime;
 
-  console.log(
-    JSON.stringify({
-      event: "pipeline_complete",
-      pipelineRunId,
-      ideasGenerated: storedIdeaIds.length,
-      mockupsSucceeded,
-      mockupsFailed,
-      totalDuration,
-      timestamp: new Date().toISOString(),
-    }),
-  );
+  log("info", "pipeline_complete", {
+    pipelineRunId,
+    ideasGenerated: storedIdeaIds.length,
+    mockupsSucceeded,
+    mockupsFailed,
+    totalDuration,
+  });
 
   return {
     pipelineRunId,
