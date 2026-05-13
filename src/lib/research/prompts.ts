@@ -144,7 +144,15 @@ Respond ONLY with the JSON object — no preamble, no explanations outside the J
 
 // ─── User Prompt Builder ────────────────────────────────────────────────
 
-export function buildUserPrompt(count: number = 4): string {
+export function buildUserPrompt(
+  count: number = 4,
+  existingTitles?: string[],
+): string {
+  const dedupSection =
+    existingTitles && existingTitles.length > 0
+      ? `\n\n## PREVIOUSLY GENERATED IDEAS — DO NOT DUPLICATE\nThe following CRO ideas have already been generated recently. You MUST NOT suggest ideas that are the same as, or very similar to, any of these:\n${existingTitles.map((t) => `- ❌ "${t}"`).join("\n")}\n\nGenerate entirely NEW and DIFFERENT ideas that explore other CRO opportunities.`
+      : "";
+
   return `Generate exactly ${count} CRO ideas for Samsung Australia's website (samsung.com/au).
 
 Focus areas for this batch:
@@ -155,6 +163,6 @@ Focus areas for this batch:
 - Bundle/combo presentation improvements
 
 Make sure each idea is specific to Samsung AU — reference actual components (hubble-price-bar, pd17-combo-package-api, hd08-hero-kv-home, hubble-product__options, etc.) and Samsung programs (trade-in, bundles, financing, Live Shop, education store).
-
+${dedupSection}
 Respond ONLY with the JSON object containing ${count} ideas.`;
 }

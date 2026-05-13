@@ -13,6 +13,7 @@ import { buildSystemPrompt, buildUserPrompt } from "./prompts";
 import { LLMClient, createMockLLMClient, ChatMessage } from "./mock-llm";
 import { CRO_CATEGORIES } from "./knowledge-base";
 import { withRetry } from "@/lib/utils/retry";
+import { checkTitleSimilarity } from "../utils/dedup";
 
 // ─── Types ──────────────────────────────────────────────────────────────
 
@@ -30,6 +31,8 @@ export interface GenerateOptions {
   count?: number;
   /** LLM client instance (uses mock if not provided) */
   llmClient?: LLMClient;
+  /** Existing idea titles from recent batches (used for dedup in prompt + post-generation filtering) */
+  existingTitles?: string[];
 }
 
 // ─── Validation ─────────────────────────────────────────────────────────
@@ -199,6 +202,7 @@ function extractJSON(text: string): string {
  *
  * @param options.count - Number of ideas to generate (default: 4, range: 3-5)
  * @param options.llmClient - LLM client to use (auto-detected from env vars if not provided)
+ * @param options.existingTitles - Recent idea titles for dedup (injected into prompt + post-generation filtering)
  * @returns Array of generated CRO ideas
  */
 export async function generateCROIdeas(
@@ -208,7 +212,7 @@ export async function generateCROIdeas(
   const client = resolveLLMClient(options.llmClient);
 
   const systemPrompt = buildSystemPrompt();
-  const userPrompt = buildUserPrompt(count);
+  const userPrompt = buildUserPrompt(count, options.existingTitles);
 
   const messages: ChatMessage[] = [
     { role: "system", content: systemPrompt },
@@ -239,8 +243,28 @@ export async function generateCROIdeas(
       return [];
     }
 
-    const validIdeas = validateAndCleanIdeas(ideasArray);
+    let validIdeas = validateAndCleanIdeas(ideasArray);
     console.log(`[Generator] Generated ${validIdeas.length}/${count} valid ideas`);
+
+    // ── Post-generation dedup filter ──
+    if (options.existingTitles && options.existingTitles.length > 0) {
+      const beforeCount = validIdeas.length;
+      validIdeas = validIdeas.filter((idea) => {
+        const result = checkTitleSimilarity(idea.title, options.existingTitles!);
+        if (result.tooSimilar) {
+          console.log(
+            `[Generator] Dedup rejected "${idea.title}" — too similar to "${result.similarTo}" (${((result.similarityScore ?? 0) * 100).toFixed(0)}%)`,
+          );
+          return false;
+        }
+        return true;
+      });
+      if (validIdeas.length < beforeCount) {
+        console.log(
+          `[Generator] Dedup filtered ${beforeCount - validIdeas.length} ideas, ${validIdeas.length} remaining`,
+        );
+      }
+    }
 
     return validIdeas.slice(0, count);
   } catch (error) {
