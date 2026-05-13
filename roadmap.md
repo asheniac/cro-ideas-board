@@ -41,25 +41,28 @@ Self-researching CRO board for samsung.com/au. Daily 3-5 CRO ideas with MiniMax 
 - ~~Create custom hooks (useIdeas, useUpdateIdea, useSwipeKeyboard)~~
 - **Status: Code complete in `ares/m4-integration` branch, not yet merged.** Athena's team evaluated: Iris (UX: 7.5/10), Theo (M5 readiness: 70%), Zara (spec gap analysis: 8 met, 3 partial, 2 unmet). **4 critical issues found** — see M4.1.
 
-### 🔄 M4.1: Fix Critical M4 Issues & Merge (CURRENT)
-- Fix swipe exit animation (card snaps back instead of flying off-screen) — Iris finding #1
-- Improve card stack visibility (increase vertical offset to 40px, differentiate shadows)
-- Add safe-area padding for mobile (env(safe-area-inset-bottom) on toast + portal buttons)
-- Fix auth bypass on generate endpoint (inconsistent `!researchSecret` check vs mockup route)
-- Fix category upsert race condition (findUnique+create → upsert)
-- Merge `ares/m4-integration` → `main`
-- **Cycles budget: 5**
+### ✅ M4.1: Fix Critical M4 Issues & Merge
+- ~~Fix swipe exit animation (card snaps back instead of flying off-screen)~~
+- ~~Improve card stack visibility (increase vertical offset to 40px, differentiate shadows)~~
+- ~~Add safe-area padding for mobile (env(safe-area-inset-bottom) on toast + portal buttons)~~
+- ~~Fix auth bypass on generate endpoint (inconsistent `!researchSecret` check vs mockup route)~~
+- ~~Fix category upsert race condition (findUnique+create → upsert)~~
+- ~~Merge `ares/m4-integration` → `main`~~
+- **Status: Complete.** Apollo VERIFY_PASS. All 5 fixes verified. Branch merged to main.
 
-### M5: Daily Scheduling & Integration
-- Vercel Cron job for daily pipeline trigger
-- Full autonomous pipeline: research → generate → mockup → store
-- Unified pipeline runner (single entry point, not 2 separate scripts)
-- Retry logic for LLM + MiniMax calls (3 attempts, exponential backoff)
-- Deduplication of ideas across batches (prompt-based negative examples + title similarity check)
-- Structured logging for cron monitoring
-- Environment variable validation at startup + health check endpoint
-- `.env.example` with all required vars
-- Final integration testing and deploy
+### ✅ M5: Daily Scheduling & Autonomous Pipeline
+- ~~Vercel Cron job for daily pipeline trigger (0 9 * * *)~~
+- ~~Full autonomous pipeline: research → generate → mockup → store~~
+- ~~Unified pipeline runner (shared core: API route + CLI script)~~
+- ~~Retry logic for LLM + MiniMax calls (3 attempts, exponential backoff)~~
+- ~~Deduplication of ideas across batches (Levenshtein + prompt-based negative examples)~~
+- ~~Structured logging (JSON format, pipelineRunId)~~
+- ~~Health check endpoint + environment variable validation~~
+- ~~`.env.example` with all 7 required vars~~
+- ~~Mobile UX fixes (responsive card height, haptic feedback, safe-area)~~
+- ~~Template pool expansion (26 templates: +5 mobile, +2 comparison)~~
+- ~~Integration testing~~
+- **Status: Complete.** Apollo VERIFY_PASS. All 12 deliverables verified. TypeScript compiles clean. All issues closed. Project deployed on Vercel.
 
 ## Lessons Learned
 
@@ -96,3 +99,16 @@ Self-researching CRO board for samsung.com/au. Daily 3-5 CRO ideas with MiniMax 
 24. **No deduplication anywhere.** Schema has `batchId` for provenance but no dedup logic. M5 needs pre-generation prompt-based dedup + post-generation title similarity check.
 25. **Retry logic is completely absent.** LLM failures return empty array. MiniMax 429 throws but never retries. Every external API call needs a retry wrapper.
 26. **The types.ts unification is perfect (10/10).** Single source of truth, all components import from `@/lib/types`. No competing interfaces found.
+
+---
+
+## Project Status: ✅ COMPLETE
+
+All 5 milestones (M1-M5) delivered and verified. The CRO Board is a fully autonomous, self-researching system that:
+- Generates 3-5 Samsung AU CRO ideas daily via Vercel Cron
+- Produces MiniMax AI mockups for each idea
+- Provides a Tinder-like swipe interface (Framer Motion) with undo, card stack, and keyboard nav
+- Organizes ideas into Liked/Disliked pages with cross-move capability
+- Includes full resilience: retry logic, deduplication, structured logging, health checks
+
+**Future enhancement (v2):** Live scraping of samsung.com/au to refresh the knowledge base with new components and pages as they launch.
