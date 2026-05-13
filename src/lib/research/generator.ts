@@ -12,6 +12,7 @@
 import { buildSystemPrompt, buildUserPrompt } from "./prompts";
 import { LLMClient, createMockLLMClient, ChatMessage } from "./mock-llm";
 import { CRO_CATEGORIES } from "./knowledge-base";
+import { withRetry } from "@/lib/utils/retry";
 
 // ─── Types ──────────────────────────────────────────────────────────────
 
@@ -75,30 +76,32 @@ function createOpenAIClient(): LLMClient {
         throw new Error("OPENAI_API_KEY environment variable is not set");
       }
 
-      const response = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify({
-          model: "gpt-4o",
-          messages: messages.map((m) => ({
-            role: m.role,
-            content: m.content,
-          })),
-          temperature: 0.8,
-          max_tokens: 4096,
-        }),
+      return withRetry(async () => {
+        const response = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify({
+            model: "gpt-4o",
+            messages: messages.map((m) => ({
+              role: m.role,
+              content: m.content,
+            })),
+            temperature: 0.8,
+            max_tokens: 4096,
+          }),
+        });
+
+        if (!response.ok) {
+          const err = await response.text();
+          throw new Error(`OpenAI API error (${response.status}): ${err}`);
+        }
+
+        const data = await response.json();
+        return data.choices[0]?.message?.content || "";
       });
-
-      if (!response.ok) {
-        const err = await response.text();
-        throw new Error(`OpenAI API error (${response.status}): ${err}`);
-      }
-
-      const data = await response.json();
-      return data.choices[0]?.message?.content || "";
     },
   };
 }
@@ -118,32 +121,34 @@ function createAnthropicClient(): LLMClient {
       const systemMsg = messages.find((m) => m.role === "system");
       const chatMessages = messages.filter((m) => m.role !== "system");
 
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": apiKey,
-          "anthropic-version": "2023-06-01",
-        },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 4096,
-          temperature: 0.8,
-          system: systemMsg?.content || "",
-          messages: chatMessages.map((m) => ({
-            role: m.role,
-            content: m.content,
-          })),
-        }),
+      return withRetry(async () => {
+        const response = await fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": apiKey,
+            "anthropic-version": "2023-06-01",
+          },
+          body: JSON.stringify({
+            model: "claude-sonnet-4-20250514",
+            max_tokens: 4096,
+            temperature: 0.8,
+            system: systemMsg?.content || "",
+            messages: chatMessages.map((m) => ({
+              role: m.role,
+              content: m.content,
+            })),
+          }),
+        });
+
+        if (!response.ok) {
+          const err = await response.text();
+          throw new Error(`Anthropic API error (${response.status}): ${err}`);
+        }
+
+        const data = await response.json();
+        return data.content?.[0]?.text || "";
       });
-
-      if (!response.ok) {
-        const err = await response.text();
-        throw new Error(`Anthropic API error (${response.status}): ${err}`);
-      }
-
-      const data = await response.json();
-      return data.content?.[0]?.text || "";
     },
   };
 }

@@ -1,4 +1,5 @@
 import { put } from "@vercel/blob";
+import { withRetry } from "@/lib/utils/retry";
 
 /**
  * Upload an image buffer to Vercel Blob storage and return the public URL.
@@ -19,16 +20,18 @@ export async function uploadImageToBlob(
     );
   }
 
-  try {
-    const blob = await put(filename, imageBuffer, {
-      access: "public",
-      contentType: "image/png",
-    });
+  return withRetry(async () => {
+    try {
+      const blob = await put(filename, imageBuffer, {
+        access: "public",
+        contentType: "image/png",
+      });
 
-    return blob.url;
-  } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Unknown blob upload error";
-    throw new Error(`Failed to upload image to Vercel Blob: ${message}`);
-  }
+      return blob.url;
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Unknown blob upload error";
+      throw new Error(`Failed to upload image to Vercel Blob: ${message}`);
+    }
+  });
 }

@@ -7,6 +7,8 @@
  * API docs: https://www.minimaxi.com/document/api/image-generation
  */
 
+import { withRetry } from "@/lib/utils/retry";
+
 // ─── Types ────────────────────────────────────────────────────────────────
 
 /** Supported aspect ratios for generated images */
@@ -154,81 +156,85 @@ export async function generateImage(
     body.negative_prompt = negativePrompt;
   }
 
-  let response: Response;
-  try {
-    response = await fetch(`${MINIMAX_API_BASE}/image_generation`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify(body),
-      // MiniMax image generation can take 10-30 seconds
-      signal: AbortSignal.timeout(60_000),
-    });
-  } catch (error) {
-    if (error instanceof DOMException && error.name === "TimeoutError") {
+  const result = await withRetry(async (): Promise<MiniMaxImageResult> => {
+    let response: Response;
+    try {
+      response = await fetch(`${MINIMAX_API_BASE}/image_generation`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify(body),
+        // MiniMax image generation can take 10-30 seconds
+        signal: AbortSignal.timeout(60_000),
+      });
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "TimeoutError") {
+        throw new MiniMaxAPIError(
+          "MiniMax image generation timed out after 60 seconds. The prompt may be too complex or the API is under heavy load.",
+        );
+      }
       throw new MiniMaxAPIError(
-        "MiniMax image generation timed out after 60 seconds. The prompt may be too complex or the API is under heavy load.",
+        `Failed to connect to MiniMax API: ${error instanceof Error ? error.message : String(error)}`,
       );
     }
-    throw new MiniMaxAPIError(
-      `Failed to connect to MiniMax API: ${error instanceof Error ? error.message : String(error)}`,
-    );
-  }
 
-  const raw = await response.text();
-  let data: MiniMaxImageResponse;
+    const raw = await response.text();
+    let data: MiniMaxImageResponse;
 
-  try {
-    data = JSON.parse(raw);
-  } catch {
-    throw new MiniMaxAPIError(
-      `MiniMax API returned non-JSON response (${response.status}): ${raw.slice(0, 300)}`,
-      response.status,
-    );
-  }
-
-  // Handle errors
-  if (!response.ok) {
-    const statusCode = response.status;
-
-    if (statusCode === 401 || statusCode === 403) {
-      throw new MiniMaxAuthError();
-    }
-    if (statusCode === 429) {
-      throw new MiniMaxRateLimitError();
+    try {
+      data = JSON.parse(raw);
+    } catch {
+      throw new MiniMaxAPIError(
+        `MiniMax API returned non-JSON response (${response.status}): ${raw.slice(0, 300)}`,
+        response.status,
+      );
     }
 
-    const errorMsg =
-      data.msg || data.base_resp?.status_msg || `HTTP ${statusCode}`;
-    throw new MiniMaxAPIError(
-      `MiniMax API error: ${errorMsg}`,
-      statusCode,
-      String(data.code ?? ""),
-    );
-  }
+    // Handle errors
+    if (!response.ok) {
+      const statusCode = response.status;
 
-  // Check response structure
-  if (data.code && data.code !== 0) {
-    throw new MiniMaxAPIError(
-      `MiniMax API returned error code ${data.code}: ${data.msg || "Unknown error"}`,
-      response.status,
-      String(data.code),
-    );
-  }
+      if (statusCode === 401 || statusCode === 403) {
+        throw new MiniMaxAuthError();
+      }
+      if (statusCode === 429) {
+        throw new MiniMaxRateLimitError();
+      }
 
-  const imageUrls = data.data?.image_urls;
-  if (!imageUrls || imageUrls.length === 0) {
-    throw new MiniMaxAPIError(
-      "MiniMax API returned a successful response but no image URLs were found.",
-    );
-  }
+      const errorMsg =
+        data.msg || data.base_resp?.status_msg || `HTTP ${statusCode}`;
+      throw new MiniMaxAPIError(
+        `MiniMax API error: ${errorMsg}`,
+        statusCode,
+        String(data.code ?? ""),
+      );
+    }
 
-  return {
-    url: imageUrls[0],
-    prompt,
-  };
+    // Check response structure
+    if (data.code && data.code !== 0) {
+      throw new MiniMaxAPIError(
+        `MiniMax API returned error code ${data.code}: ${data.msg || "Unknown error"}`,
+        response.status,
+        String(data.code),
+      );
+    }
+
+    const imageUrls = data.data?.image_urls;
+    if (!imageUrls || imageUrls.length === 0) {
+      throw new MiniMaxAPIError(
+        "MiniMax API returned a successful response but no image URLs were found.",
+      );
+    }
+
+    return {
+      url: imageUrls[0],
+      prompt,
+    };
+  });
+
+  return result;
 }
 
 /**
