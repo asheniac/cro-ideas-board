@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  turbopack: {
+    root: "/Users/ash/Desktop/Dev/cro-ideas-board",
+  },
 };
 
 export default nextConfig;

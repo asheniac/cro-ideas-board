@@ -235,10 +235,20 @@ export async function runPipeline(
         continue; // Partial failure: idea is already stored, just skip mockup
       }
 
-      // Download image from MiniMax's temporary URL
+      // Download image from MiniMax's temporary URL, or decode base64 data URI
       let imageBuffer: Buffer;
+      const isDataUri = imageResult.url.startsWith("data:");
       try {
-        imageBuffer = await downloadImage(imageResult.url);
+        if (isDataUri) {
+          // Extract base64 content from data URI
+          const base64Content = imageResult.url.split(",")[1];
+          if (!base64Content) {
+            throw new Error("Invalid data URI: no base64 content found");
+          }
+          imageBuffer = Buffer.from(base64Content, "base64");
+        } else {
+          imageBuffer = await downloadImage(imageResult.url);
+        }
       } catch (error) {
         const msg = error instanceof Error ? error.message : String(error);
         errors.push(`mockup: idea ${ideaId} download: ${msg}`);

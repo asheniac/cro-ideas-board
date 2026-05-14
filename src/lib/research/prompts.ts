@@ -108,11 +108,15 @@ Each idea must have these fields:
   (e.g., "Increase add-to-cart rate by reducing friction in the configurator", 
   "Increase trade-in adoption rate by making the value proposition more visible")
 - **category** (string): ONE category slug from the list above that best fits this idea
-- **mockupPrompt** (string): A detailed prompt for an AI image generator (like MiniMax) to create a 
-  mockup of this change. Include: the page type, the component being modified, layout details, 
-  specific elements and their positions, color scheme (Samsung uses dark themes with white text 
-  on product pages, clean white backgrounds on info pages), and the key visual change. 
-  Be specific about positioning, sizing, and visual treatment.
+- **mockupPrompt** (string): A detailed prompt for an AI image generator (like MiniMax) to create a
+  mockup of this change. The mockup MUST be described as a React component / Figma UI design —
+  a clean, professional product design wireframe showing the actual UI element. Include:
+  the page type, the component being modified, layout details, specific elements and their positions,
+  color scheme (Samsung uses dark themes with white text on product pages, clean white backgrounds on info pages),
+  and the key visual change. Describe what the UI component looks like as a product designer would
+  in a Figma file: "A mobile sticky bottom bar with a large 'Add to Cart' button, countdown timer,
+  and trust badges in a horizontal row" — NOT "a screenshot of a website". Be specific about
+  positioning, sizing, and visual treatment. Output the mockupPrompt in English.
 
 ## CRITICAL RULES
 1. Every idea MUST reference specific Samsung AU components, pages, or programs
@@ -120,7 +124,7 @@ Each idea must have these fields:
 3. Every idea MUST target a specific conversion metric
 4. Ideas MUST be diverse — cover different categories and page types
 5. DO NOT suggest ideas for elements that already exist (e.g., don't suggest adding Afterpay if it's already there)
-6. The mockupPrompt MUST be detailed enough for an AI image generator to produce a recognizable mockup
+6. The mockupPrompt MUST describe a React component / Figma-style UI design mockup — clean product design wireframe, NOT a website screenshot or photography. Describe UI elements like a product designer: component layouts, spacing, typography, color chips. No real-world photography or people.
 7. Focus on ideas that leverage what's MISSING (see the missing elements list) or improve what EXISTS
 
 ## Response Format

@@ -28,8 +28,10 @@ export interface MiniMaxImageOptions {
 }
 
 export interface MiniMaxImageResult {
-  /** URL of the generated image */
+  /** URL or data URI of the generated image */
   url: string;
+  /** Whether the URL is a base64 data URI (vs a remote URL) */
+  isDataUri?: boolean;
   /** The prompt used to generate this image */
   prompt: string;
   /** When this image expires (if expiry info is available) */
@@ -38,7 +40,7 @@ export interface MiniMaxImageResult {
 
 // ─── API Configuration ───────────────────────────────────────────────────
 
-const MINIMAX_API_BASE = "https://api.minimax.chat/v1";
+const MINIMAX_API_BASE = "https://api.minimax.io/v1";
 const DEFAULT_MODEL = "image-01";
 const DEFAULT_ASPECT_RATIO: AspectRatio = "16:9";
 
@@ -106,6 +108,7 @@ interface MiniMaxImageResponse {
   msg?: string;
   data?: {
     image_urls?: string[];
+    image_base64?: string[];
   };
   base_resp?: {
     status_code?: number;
@@ -140,7 +143,6 @@ export async function generateImage(
     prompt,
     aspectRatio = DEFAULT_ASPECT_RATIO,
     negativePrompt = UI_MOCKUP_NEGATIVE_PROMPT,
-    numImages = 1,
     model = DEFAULT_MODEL,
   } = options;
 
@@ -148,7 +150,6 @@ export async function generateImage(
     model,
     prompt,
     aspect_ratio: aspectRatio,
-    n: numImages,
   };
 
   // Only include negative_prompt if provided (MiniMax may error on empty string)
@@ -222,14 +223,24 @@ export async function generateImage(
     }
 
     const imageUrls = data.data?.image_urls;
-    if (!imageUrls || imageUrls.length === 0) {
+    const imageBase64 = data.data?.image_base64;
+
+    // Prefer URL field; fall back to base64 decoding
+    let finalUrl: string;
+    if (imageUrls && imageUrls.length > 0) {
+      finalUrl = imageUrls[0];
+    } else if (imageBase64 && imageBase64.length > 0) {
+      // base64 doesn't need download — it's already the image data
+      // Return a data URI so it can be used directly
+      finalUrl = `data:image/png;base64,${imageBase64[0]}`;
+    } else {
       throw new MiniMaxAPIError(
-        "MiniMax API returned a successful response but no image URLs were found.",
+        "MiniMax API returned a successful response but no image URLs or base64 data were found.",
       );
     }
 
     return {
-      url: imageUrls[0],
+      url: finalUrl,
       prompt,
     };
   });
@@ -245,15 +256,11 @@ export async function generateImages(
   options: MiniMaxImageOptions,
 ): Promise<MiniMaxImageResult[]> {
   const numImages = options.numImages ?? 2;
-  const result = await generateImage({ ...options, numImages });
+  const results: MiniMaxImageResult[] = [];
 
-  // The API returns one URL; for multiple images, make multiple calls
-  if (numImages <= 1) return [result];
-
-  const results: MiniMaxImageResult[] = [result];
-  for (let i = 1; i < numImages; i++) {
+  for (let i = 0; i < numImages; i++) {
     try {
-      const r = await generateImage({ ...options, numImages: 1 });
+      const r = await generateImage({ ...options, numImages: undefined });
       results.push(r);
     } catch {
       // Silently skip failed variants — partial results are still useful
@@ -266,18 +273,24 @@ export async function generateImages(
 /**
  * Build a complete image generation prompt from a CRO idea mockupPrompt,
  * appending standard UI/website mockup style guidance.
+ *
+ * Generates a React component / Figma-style UI mockup — clean, professional,
+ * like a product design wireframe showing the actual UI element described.
  */
 export function buildMockupPrompt(basePrompt: string): string {
   const styleGuidance = [
-    "Clean UI design",
-    "Professional e-commerce mockup",
-    "Samsung brand style with blue accent (#2189FF)",
-    "Sharp text and clear product imagery",
-    "Website screenshot style",
-    "No watermarks",
+    "React component UI mockup",
+    "Clean Figma-style product design",
+    "Professional e-commerce UI wireframe",
+    "Samsung brand aesthetic with blue accent (#2189FF)",
+    "Mobile-first responsive layout",
+    "Flat design with subtle shadows",
+    "High-fidelity prototype screenshot",
+    "No photography, no real people",
+    "UI component layout, not illustration",
   ].join(", ");
 
-  return `${basePrompt}. Style: ${styleGuidance}.`;
+  return `${basePrompt}. Style: ${styleGuidance}. Aspect ratio 9:16 for mobile mockup.`;
 }
 
 // ─── Re-exports ───────────────────────────────────────────────────────────
