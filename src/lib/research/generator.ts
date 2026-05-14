@@ -156,12 +156,53 @@ function createAnthropicClient(): LLMClient {
   };
 }
 
+/**
+ * MiniMax (Text-01) client using direct fetch.
+ */
+function createMiniMaxLLMClient(): LLMClient {
+  return {
+    async chat(messages: ChatMessage[]): Promise<string> {
+      const apiKey = process.env.MINIMAX_API_KEY;
+      if (!apiKey) {
+        throw new Error("MINIMAX_API_KEY environment variable is not set");
+      }
+
+      return withRetry(async () => {
+        const response = await fetch("https://api.minimax.io/v1/text/chatcompletion_v2", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify({
+            model: "MiniMax-Text-01",
+            messages: messages.map((m) => ({
+              role: m.role,
+              content: m.content,
+            })),
+            temperature: 0.8,
+            max_tokens: 4096,
+          }),
+        });
+
+        if (!response.ok) {
+          const err = await response.text();
+          throw new Error(`MiniMax LLM API error (${response.status}): ${err}`);
+        }
+
+        const data = await response.json();
+        return data.choices?.[0]?.message?.content || "";
+      });
+    },
+  };
+}
+
 // ─── LLM Client Resolution ──────────────────────────────────────────────
 
 function resolveLLMClient(providedClient?: LLMClient): LLMClient {
   if (providedClient) return providedClient;
 
-  // Try Anthropic first, then OpenAI, then mock
+  // Try Anthropic first, then OpenAI, then MiniMax, then mock
   if (process.env.ANTHROPIC_API_KEY) {
     console.log("[Generator] Using Anthropic Claude (ANTHROPIC_API_KEY found)");
     return createAnthropicClient();
@@ -170,6 +211,11 @@ function resolveLLMClient(providedClient?: LLMClient): LLMClient {
   if (process.env.OPENAI_API_KEY) {
     console.log("[Generator] Using OpenAI GPT-4o (OPENAI_API_KEY found)");
     return createOpenAIClient();
+  }
+
+  if (process.env.MINIMAX_API_KEY) {
+    console.log("[Generator] Using MiniMax Text-01 (MINIMAX_API_KEY found)");
+    return createMiniMaxLLMClient();
   }
 
   console.log("[Generator] Using Mock LLM (no API keys configured)");
